@@ -1,0 +1,5 @@
+
+currScriptDir=`dirname $0`
+source `find ${currScriptDir}/../../../ -name paths.sh`
+make
+
