@@ -27,7 +27,7 @@ EXIT_SUCCESS=0
 EXIT_FAILURE=1
 
 # Where the tool is installed.
-prefix="${prefix:-/links/grid/shared/arhofman/wes_somatic_var_caller_comp/sim_cancer/eval_vcf/imported_scripts/hdf5/hdf5-1.8.11}"
+prefix="${prefix:-/wes_somatic_var_caller_comp/sim_cancer/eval_vcf/imported_scripts/hdf5/hdf5-1.8.11}"
 PARALLEL=no		# Am I in parallel mode?
 AR="ar"
 RANLIB="ranlib"
