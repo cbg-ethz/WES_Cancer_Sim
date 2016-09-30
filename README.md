@@ -11,8 +11,7 @@ Ariane Hofmann (ariane.hofmann@bsse.ethz.ch)
 - see ./sim_cancer/README.md for more information
 
 <p align="center">
-	<img src="img/Figure1.pdf?raw=true" alt="Workflow of the comparison of the nine variant callers"/>
+	<img src="img/Figure1.png?raw=true" alt="Workflow of the comparison of the nine variant callers"/>
 </p>
 
-(https://github.com/cbg-ethz/WES_Cancer_Sim/sim_cancer/Figure1.pdf)
 
