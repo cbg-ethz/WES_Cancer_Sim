@@ -11,7 +11,7 @@ if [ -z "$1" ]; then
 fi
 
 # callers for venn diagram: 
-declare -a callers_venn=('joint' 'deep' 'gatkUG' 'somSniper' 'gatkHP') # top 5 callers
+declare -a callers_venn=('joint' 'deep' 'gatkUG' 'somSniper' 'sinvict') # top 5 callers
 
 for caller_idx in `seq 1 ${#callers_venn[@]}`
 do

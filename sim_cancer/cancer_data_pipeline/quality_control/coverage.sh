@@ -73,12 +73,12 @@ function coverage()
 				$samtools view -b -F 4 $fn_bam | $coverageBed -abam stdin -b $gtf_file -d > $TempPerBaseCoverage
 				echo "cat $TempPerBaseCoverage | gzip -9 > $PerBaseCoverage"
 				cat $TempPerBaseCoverage | gzip -9 > $PerBaseCoverage
-				echo "zcat $PerBaseCoverage | awk '{print $NF}' > $PerBaseCoverageR"
+				echo "zcat $PerBaseCoverage | awk '{print \$NF}' > $PerBaseCoverageR"
 				zcat $PerBaseCoverage | awk '{print $NF}' > $PerBaseCoverageR
 				rm $TempPerBaseCoverage
 			
-				`find ../ -name coverageR_quality_stats.R` $PerBaseCoverageR 
-				`find ../ -name coverageR_quality_stats.R` $PerBaseCoverageR >> $coverage_stats
+				`find $gitDir -name coverageR_quality_stats.R` $PerBaseCoverageR 
+				`find $gitDir -name coverageR_quality_stats.R` $PerBaseCoverageR >> $coverage_stats
 			fi
 	
 			if [ -f $TempNOIntersect ]; then
@@ -99,6 +99,8 @@ function coverage()
 				echo -e "$cnt_percentage_YES\tpercentage of the alignments that overlap the gene tracks"
 			        rm $TempNOIntersect
 			fi
+		else 
+			echo "$coverage_stats already exists. Nothing to be done."
 		fi
 
 	done

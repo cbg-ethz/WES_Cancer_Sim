@@ -154,6 +154,8 @@ void check_bam_qual(char* fn_bam, variant v, int* cov, int* supp_qual, int* supp
 
 void split_variants(vector<variant>* vars)
 {
+	sort(vars->begin(), vars->end(), variant_compare_seq); // sort it (Jonas' way) 
+	
 	// split variants, where the ref and alt have the same length > 1 into 
 	// individual SNVs
 	int maxpos = 0; 
@@ -420,7 +422,7 @@ float compute_auPRC_WriteCurve(vector<pair<float, int> >* PR, int total_ones, ch
 	double* curve = new double[2*PR->size()]; 
 	//for(unsigned int i=0; i<PR->size(); i++)
 	unsigned int cnt = 0;
-	for(int i=PR->size()-1; i>=0; i--) // Jochen and Ariane noticed this loop started previously with the worst ranked SNVs; now we reverse the order
+	for(int i=PR->size()-1; i>=0; i--) 
 	{
 		tp += PR->at(i).second==1;
 		// precision 

@@ -10,16 +10,24 @@ source(paste(script.dir,"/../../paths.R",sep=""))
 
 
 ToSubstractFromFreq=0.025
-doALL=TRUE
+ALLBLOCKS=FALSE
+FIGURE1A=FALSE
+COMPARETOSNK1=FALSE
+COMBISOVERLAP=FALSE
+ALLTUNES=FALSE
+TUNING=FALSE
+LOCREBINOM=FALSE
+FIGURE1ACOVERAGE=TRUE
 
 ## Compare vsn_k20 and sn_k1 directly
-if(doALL){
+if(COMPARETOSNK1){
 	names=c(paste(eval_dir_k20,"TU.wCont20.final.RG.50perc_NO_final.RG.50perc_alternative_two.sided.deepSNV.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.gatk_SNVs.raw.SOMATIC.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.muTect_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.option__noE_samvar_1_2.SOMATIC.vcf.gz_indel0.eval_SN_summaryFreq",sep=""),
+		paste(eval_dir_k20,"sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.somaticSniper_SNVs_Raw_qual.noComma.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		
@@ -29,10 +37,11 @@ if(doALL){
 		paste(eval_dir_snk1,"TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_snk1,"TU.wCont20.final.RG.50perc.muTect_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_snk1,"TU.wCont20.final.RG.50perc.option__noE_samvar_1_2.SOMATIC.vcf.gz_indel0.eval_SN_summaryFreq",sep=""),
+		paste(eval_dir_snk1,"sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_snk1,"TU.wCont20.final.RG.50perc.somaticSniper_SNVs_Raw_qual.noComma.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_snk1,"TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq",sep=""))
 
-		toolsRaw=c("deepSNV","GATK HP", "GATK UG", "JointSNVMix2", "MuTect", "SAMtools","SomaticSniper","VarScan2")
+		toolsRaw=c("deepSNV","GATK HP", "GATK UG", "JointSNVMix2", "MuTect", "SAMtools", "SiNVICT", "SomaticSniper","VarScan2")
 		tools=c(paste(toolsRaw," MS",sep=""),paste(toolsRaw," D",sep=""))
 		num = length(names)
 		colors=rainbow(num)
@@ -80,35 +89,39 @@ if(doALL){
 }
 
 
-if(doALL){
+if(COMBISOVERLAP){
 	## Figure 3D - combinations and overlaps - or rather 3C now
 	eval_overlap_dir_specific=paste(overlap_dir,"/specific_overlaps/overlaps/eval_10000_160527/",sep="")
 	eval_combinations=paste(algmt_k20_dir,"/variants_combined/eval_10000_160527/",sep="")
+	eval_combinations_sinvict=paste(algmt_k20_dir,"/variants_combined_sinvict/eval_10000_160527/",sep="")
 
-	names=c(paste(eval_overlap_dir_specific, c(list.files(path=eval_overlap_dir_specific,pattern="eval_SN_summaryFreq$")),sep=""),
-		paste(eval_combinations,"combinedlistbetter_5_deepSNV_varscan2_samvar_1_2_muTect_jointSNVMix2_prod.vcf_indel0.eval_SN_summaryFreq",sep=""),
+	names=c(paste(eval_overlap_dir_specific,"overlap_deepSNV_joint_varscan_muTect_sinvict_original_joint.vcf_indel0.eval_SN_summaryFreq",sep=""),
+		paste(eval_overlap_dir_specific,"overlap_deepSNV_joint_varscan_muTect_samvar_1_2_original_joint.vcf_indel0.eval_SN_summaryFreq",sep=""),
+		paste(eval_overlap_dir_specific,"overlap_deepSNV_joint_varscan_muTect_original_joint.vcf_indel0.eval_SN_summaryFreq",sep=""),
+		paste(eval_overlap_dir_specific,"overlap_deepSNV_joint_varscan_muTect_sinvict_somaticSniper_gatk_SNVs_gatkHPCaller_samvar_1_2_original_joint.vcf_indel0.eval_SN_summaryFreq",sep=""),
+		paste(eval_combinations_sinvict,"combinedlistbetter_9_all_9_prod.vcf_indel0.eval_SN_summaryFreq",sep=""),
+		paste(eval_combinations_sinvict,"combinedlistbetter_5_deep_varsc_mutec_joint_sinv_prod.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_combinations,"combinedlistbetter_4_deepSNV_varscan2_muTect_jointSNVMix2_prod.vcf_indel0.eval_SN_summaryFreq",sep=""),
-		paste(eval_combinations,"combinedlistbetter_5_deepSNV_varscan2_somaticSniper_muTect_jointSNVMix2_prod.vcf_indel0.eval_SN_summaryFreq",sep=""),
-		paste(eval_combinations,"combinedlistbetter_8_all_8_prod.vcf_indel0.eval_SN_summaryFreq",sep="")
-		)
+		paste(eval_combinations,"combinedlistbetter_5_deepSNV_varscan2_samvar_1_2_muTect_jointSNVMix2_prod.vcf_indel0.eval_SN_summaryFreq",sep=""))
 		
 	print(names)
 	
-	tools=c("ov deep,Joint,MuT,VarSc",
+	tools=c("ov deep,Joint,MuT,VarSc sinvi",
 		"ov deep,Joint,MuT,SAMtools,VarSc", 
-		"ov all eight tools", 
-		"ov deep,Joint,MuT,somSniper,VarSc", 
-		"comb deep,Joint,MuT,SAM,VarSc", 
-		"comb deep,Joint,MuT,VarSc", 
-		"comb deep,Joint,MuT,somSniper,VarSc", 
-		"comb all eight tools")
+		"ov deep,Joint,MuT,VarSc",
+		"ov all nine tools", 
+		"comb all nine",
+		"comb deep,Joint,MuT,VarSc sinvi",
+		"comb deep,Joint,MuT,VarSc",
+		"comb deep,Joint,MuT,SAM,VarSc")
 
 	print(tools)
 	
 	stopifnot(length(names)==length(tools))
 	num = length(names)
-	colors=c(rep(c(brewer.pal(8,"Accent")[6], brewer.pal(11,"PiYG")[8], brewer.pal(9,"Oranges")[4], brewer.pal(9,"GnBu")[6]),2)) 
-	colors=colors[c(2,1,4,3,1,2,3,4)]
+	#colors=c(rep(c(brewer.pal(8,"Accent")[6], brewer.pal(11,"PiYG")[8], brewer.pal(9,"Oranges")[4], brewer.pal(9,"GnBu")[6]),2)) 
+	colors=c(rep(c(brewer.pal(8,"Accent")[6], brewer.pal(11,"PiYG")[8], brewer.pal(9,"Oranges")[4], "black"),2)) # glorious 5, glorious 4, 4+sam, all nine
+	colors=colors[c(1,3,2,4,4,1,2,3)]
 	stopifnot(length(colors)==length(tools))
 
 	x=read.table(names[1]); 
@@ -159,13 +172,15 @@ if(doALL){
 		#par(xpd=T, mar=par()$mar+c(6,6,0,6))
 		cnt=1
 		i=1
+		myLWD=c(rep(6,num))
+		myLWD=ifelse(myLTY==3,8,6)
 		idxToPlot=which(xvals<=0.08)
 		x=read.table(names[1])
 		vals=x[(len*(block-1)+1):(len*block), 2]
 
 		print(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])))
 		plot(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])), type="l", col=colors[1], xlab="Variant Frequency", ylab="Sensitivity",lty=myLTY[i],ylim=c(0,0.55),lwd=myLWD[i],cex.lab=2.5,cex.axis=2.5,xlim=c(0.00,0.05))
-		abline(v=xvals[idxToPlot],lty=3,col="gray")
+		abline(v=xvals[idxToPlot],lty=3,lwd=myLWD[1],col="gray")
 
 		for (i in 2:num)
 		{
@@ -181,6 +196,8 @@ if(doALL){
 	if ( ! file.exists(comb_overlap_pdf) ){
 	#pdf(comb_overlap_pdf,pointsize=3)
 	pdf(comb_overlap_pdf)
+	myLTY=c(2,2,2,2,3,3,3,3)
+	myLWD=ifelse(myLTY==3,3,2)
 	vals = x[(len*(block-1)+1):(len*block), 2] 	# this is the sensitivity, which is in the second column of the SN files; Here we take the block "block" of the sensitivity
 								# which is for a certain precision cutoff
 	plot(cbind(c(0,xvals[idxToPlot]),c(0,vals[idxToPlot])), type="n", col=colors[1], xlab="Variant Frequency", ylab="Sensitivity",ylim=c(0,1),xlim=c(0,1),lty=myLTY[1],lwd=myLWD[1])
@@ -202,9 +219,8 @@ if(doALL){
 #quit()
 }
 
-if(doALL){
+if(ALLBLOCKS){
 	## just one tool of choice, and then all blocks
-	eval_dir_k20="/links/grid/scratch/singerj/sim_cancer_exome/data/subsample/final_vcfs_0.25/tree_blat_i70_s60/alignments_vsn_k20/variants_default/eval_10000_160527/"
 
 	names=c(paste(eval_dir_k20,"TU.wCont20.final.RG.50perc_NO_final.RG.50perc_alternative_two.sided.deepSNV.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""),
@@ -212,15 +228,16 @@ if(doALL){
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.gatk_SNVs.raw.SOMATIC.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.muTect_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""),
+		paste(eval_dir_k20,"sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.somaticSniper_SNVs_Raw_qual.noComma.vcf_indel0.eval_SN_summaryFreq",sep=""),
 		paste(eval_dir_k20,"TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq",sep=""))
 
-	tools=c("deepSNV", "JointSNVMix2", "SAMtools", "GATK UG", "GATK HP", "MuTect", "SomaticSniper","Varscan2")
+	tools=c("deepSNV", "JointSNVMix2", "SAMtools", "GATK UG", "GATK HP", "MuTect", "SiNVICT", "SomaticSniper","Varscan2")
 	myLTY=c(3,2,1,4,6,5)
 	myLWD=c(3,2,2,2,2,2)
 	
 	
-	for (tool in 1:8){
+	for (tool in 1:9){
 		curr_names=names[tool]
 		num = length(curr_names)
 		colors=rainbow(num)
@@ -255,27 +272,31 @@ if(doALL){
 	
 } 
 
-if(doALL)
+if(FIGURE1A){
 	## Figure 1A in the paper
 
 	all_eval_dirs=eval_dir_k20
-	
-	for (curr_eval_dir in all_eval_dirs){
-		names=c(paste(curr_eval_dir,"TU.wCont20.final.RG.50perc_NO_final.RG.50perc_alternative_two.sided.deepSNV.vcf_indel0.eval_SN_summaryFreq",sep=""),
-			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf_indel0.eval_SN_summaryFreq",sep=""),
-			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.gatk_SNVs.raw.SOMATIC.vcf_indel0.eval_SN_summaryFreq",sep=""),
-			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""),
-			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.muTect_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""),
-			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.option__noE_samvar_1_2.SOMATIC.vcf.gz_indel0.eval_SN_summaryFreq",sep=""),
-			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.somaticSniper_SNVs_Raw_qual.noComma.vcf_indel0.eval_SN_summaryFreq",sep=""),
-			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq",sep=""))
 
-		tools=c("deepSNV", "GATK HP", "GATK UG", "JointSNVMix2", "MuTect", "SAMtools", "SomaticSniper", "Varscan2")
+	for (curr_eval_dir in all_eval_dirs){
+
+ 		names=c(paste(curr_eval_dir,"TU.wCont20.final.RG.50perc_NO_final.RG.50perc_alternative_two.sided.deepSNV.vcf_indel0.eval_SN_summaryFreq",sep=""),
+ 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf_indel0.eval_SN_summaryFreq",sep=""),
+ 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.gatk_SNVs.raw.SOMATIC.vcf_indel0.eval_SN_summaryFreq",sep=""),
+ 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""),
+ 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.muTect_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""),
+ 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.option__noE_samvar_1_2.SOMATIC.vcf.gz_indel0.eval_SN_summaryFreq",sep=""),
+ 			paste(curr_eval_dir,"sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.eval_SN_summaryFreq",sep=""),
+ 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.somaticSniper_SNVs_Raw_qual.noComma.vcf_indel0.eval_SN_summaryFreq",sep=""),
+ 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq",sep=""))
+# 
+
+		tools=c("deepSNV", "GATK HP", "GATK UG", "JointSNVMix2", "MuTect", "SAMtools", "SiNVICT", "SomaticSniper", "Varscan2")
 		num = length(names)
 		#colors=rainbow(num)
 		#colors=brewer.pal(8,"Accent")
-		colors=c(brewer.pal(9,"Set1")[-6])
-		colors=colors[c(1,5,4,2,6,3,7,8)]
+		#colors=c(brewer.pal(9,"Set1")[-6])
+		#colors=colors[c(1,5,4,2,6,3,7,8)]
+		colors=c(brewer.pal(9,"Set1")[c(-2,-6)], brewer.pal(9, "Blues")[c(4,8)])[c(1,4,3,9,5,2,8,6,7)]
 		x=read.table(names[1]);
 		len=dim(x)[1]/5
 		xvals= x[(len*3+1):(len*4), 1] # this is the frequency, which is in the first column of the SN files
@@ -288,7 +309,7 @@ if(doALL)
 		#myLWD=c(2,3,2)
 		myLTY=c(2,1) # without 5% FDR
 		myLWD=c(2,2) # without 5% FDR
-		numGroundTruthSNVs=x[(len*3+1):(len*4), 3]
+		numGroundTruthSNVs=x[(len*3+1):(len*4), 3] ## hast to be 3 if summary!!, 4 if eval_SN
 		idxToPlot=which(numGroundTruthSNVs>=200)
 	
 	
@@ -333,21 +354,8 @@ if(doALL)
 				#points(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])), col=colors[i])
 			}
 	
-	# 		block=4
-	# 		cnt=3
-	# 		vals = x[(len*(block-1)+1):(len*block), 2] 
-	# 		for (i in 1:num)
-	# 		{
-	# 			x=read.table(names[i]); 
-	# 			vals = x[(len*(block-1)+1):(len*block), 2]
-	# 			lines(cbind(xvals, vals), col=colors[i], lty=myLTY[cnt],lwd=myLWD[cnt])
-	# 		}
-				
 			legend("bottomright",inset=c(-1,-1), legend=tools, col=colors, lwd=3)
-			
-	#		legend("bottomleft",inset=c(-1,-1),legend=c("10%", "5%", "1%"),lwd=myLWD,title="False discovery cutoff",lty=myLTY)
 			legend("bottomleft",inset=c(-1,-1),legend=c("10%", "5%"),lwd=myLWD,title="False discovery cutoff",lty=myLTY)
-			#par(mar=c(5, 4, 4, 2) + 0.1)
 			dev.off()
 		}
 		legend_pdf=paste(curr_eval_dir,"SN_all_twoPrec_10_5_legend.pdf",sep="")
@@ -380,20 +388,8 @@ if(doALL)
 				#lines(cbind(xvals[idxToPlot], vals[idxToPlot]), col=colors[i], lty=myLTY[cnt],lwd=myLWD[cnt])
 			}
 	
-	
-	# 		block=4
-	# 		cnt=3
-	# 		vals = x[(len*(block-1)+1):(len*block), 2] 
-	# 		for (i in 1:num)
-	# 		{
-	# 			x=read.table(names[i]); 
-	# 			vals = x[(len*(block-1)+1):(len*block), 2]
-	# 			#lines(cbind(xvals, vals), col=colors[i], lty=myLTY[cnt],lwd=myLWD[cnt])
-	# 		}
 			
 			legend("bottomright", legend=tools, col=colors, lwd=3,cex=2.5)
-			
-			#legend("bottomleft",legend=c("10%", "5%", "1%"),lwd=myLWD,title="False discovery cutoff",lty=myLTY, cex=2.5)
 			legend("bottomleft",legend=c("10%", "5%"),lwd=myLWD,title="False discovery cutoff",lty=myLTY,cex=2.5)
 			#par(mar=c(5, 4, 4, 2) + 0.1)
 			dev.off()
@@ -402,11 +398,12 @@ if(doALL)
 		if ( ! file.exists(SN_inlet_pdf) ){
 			pdf(SN_inlet_pdf,pointsize=3)
 			#par(xpd=T, mar=par()$mar+c(6,6,0,6))
+			myLWD=c(6,6,6,6,6,6,6,6,6,6)
 			cnt=1
 			i=1
 			plot_untdxToPlotl=10	
-			numGroundTruthSNVs=x[(len*3+1):(len*4), 3]
-			#idxToPlot=which(numGroundTruthSNVs>=200 && xvals<=0.08)
+			numGroundTruthSNVs=x[(len*3+1):(len*4), 3] ## has to be 3 for summary!
+			print(idxToPlot)
 			idxToPlot=which(xvals<=0.08)
 
 			block=3
@@ -417,7 +414,7 @@ if(doALL)
 			print(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])))
 			plot(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])), type="l", col=colors[1], xlab="Variant Frequency", ylab="Sensitivity",lty=myLTY[cnt],ylim=c(0,0.55),lwd=myLWD[cnt],cex.lab=2.5,cex.axis=2.5,xlim=c(0.00,0.05))
 			#points(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])),col=colors[1])
-			abline(v=xvals[idxToPlot],lty=3,col="gray")
+			abline(v=xvals[idxToPlot],lty=3,lwd=myLWD[1],col="gray")
 	
 			for (i in 2:num)
 			{
@@ -449,14 +446,14 @@ if(doALL)
 } 
 
 
-if(doALL){
+if(ALLTUNES){
 	print("plot all tunes")
 	## plot all tunes 
 
 	normalVersionEvalDir=c(paste(base_dir,"/alignments_vsn_k20/variants_default/eval_10000_160527/",sep=""))
 	all_eval_dirs=eval_dir_tuned
 
-	tools=c("SAMtools","deepSNV","JointSNVMix2","VarScan2")
+	tools=c("SAMtools","deepSNV","JointSNVMix2","VarScan2","SiNVICT")
 	
 	for (curr_eval_dir in all_eval_dirs){
 		for (tool in tools){
@@ -468,8 +465,9 @@ if(doALL){
 				names=c(paste(curr_eval_dir,c(list.files(path=curr_eval_dir,pattern="TU.wCont20.final.RG.50perc_.*\\joint.*\\.vcf_indel0.eval_SN_summaryFreq$")),sep=""),paste(normalVersionEvalDir,"/TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq",sep=""))
 			} else if (tool=="VarScan2"){
 				names=c(paste(curr_eval_dir,c(list.files(path=curr_eval_dir,pattern="TU.wCont20.final.RG.50perc.bam_.*\\varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq$")),sep=""),paste(normalVersionEvalDir,"/TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq",sep=""))
+			} else if (tool=="SiNVICT"){
+				names=c(paste(curr_eval_dir,c(list.files(path=curr_eval_dir,pattern="sinvict.*\\vcf_indel0.eval_SN_summaryFreq$")),sep=""),paste(normalVersionEvalDir,"/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.eval_SN_summaryFreq",sep=""))
 			}
-		
 	
 			print(names)
 			num_tunes=length(names)
@@ -534,17 +532,16 @@ if(doALL){
 					#lines(cbind(xvals, vals), col=colors[i], lty=MyLty[i])
 				}
 				print("legend:")
-				print(sub("jointSNVMix2_SNVs_Raw.","",sub("_indel0.eval_SN_summaryFreq","",sub("TU.wCont20.final.RG.50perc","",basename(names)))))
-				legend("bottomright", legend=sub("_NO_final.RG.50perc_alternative_two.sided_","",sub("jointSNVMix2_SNVs_Raw.","",sub("_indel0.eval_SN_summaryFreq","",sub("TU.wCont20.final.RG.50perc","",basename(names))))), col=colors, lwd=3,cex=2.5,lty=MyLty)
+				print(sub("_vs_NO_final.RG.50perc_somatic","",sub("jointSNVMix2_SNVs_Raw.","",sub("_indel0.eval_SN_summaryFreq","",sub("TU.wCont20.final.RG.50perc","",basename(names))))))
+				legend("bottomright", legend=sub("_vs_NO_final.RG.50perc_somatic","",sub("_NO_final.RG.50perc_alternative_two.sided_","",sub("jointSNVMix2_SNVs_Raw.","",sub("_indel0.eval_SN_summaryFreq","",sub("TU.wCont20.final.RG.50perc","",basename(names)))))), col=colors, lwd=3,cex=2.5,lty=MyLty)
 				dev.off()
 			}
 		}
-		
 	}
 } # enf of if FALSE number 3
 
 
-if(doALL){	
+if(TUNING){	
 	## Figure 3 in Paper - or rather 3B now, the tuning plot
 	eval_dirs=c(paste(base_dir,"alignments_vsn_k20/variants_tuned/eval_10000_160527/",sep=""),paste(base_dir,"alignments_vsn_k20/variants_default/eval_10000_160527/",sep=""))
 
@@ -560,18 +557,21 @@ if(doALL){
 		paste(eval_dirs[2],	list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc_NO_final.RG.50perc_alternative_two.sided.deepSNV.vcf_indel0.eval_SN_summaryFreq$"),sep=""),
 		paste(eval_dirs[1],c(	list.files(path=eval_dirs[1],pattern="TU.wCont20.final.RG.50perc.bam_minvarfreq0.02_varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[1],pattern="TU.wCont20.final.RG.50perc.bam_strandfilter1_varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq$")),sep=""),
-		paste(eval_dirs[2],	list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq$"),sep=""))
+		paste(eval_dirs[2],	list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq$"),sep=""),
+		paste(eval_dirs[1], c( list.files(path=eval_dirs[1],pattern="sinvictqscorecutoff60_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.eval_SN_summaryFreq$")),sep=""),
+		paste(eval_dirs[2],	list.files(path=eval_dirs[2],pattern="sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.eval_SN_summaryFreq$"),sep="") )
 	
 	print(names)
 	num_tunes=length(names)
 	print(num_tunes)
 	Rawcolors=c(brewer.pal(9,"Set1")[-6])
 	colors=Rawcolors[c(rep(3,5),rep(2,2),rep(1,2),rep(8,3))]
-	MyLty=c(2,3,4,5,1,2,1,2,1,2,3,1)
+	colors=c(brewer.pal(9,"Set1")[c(-2,-6)], brewer.pal(9, "Blues")[c(4,8)])[c(1,4,3,9,5,2,8,6,7)][c(rep(6,5),rep(4,2),rep(1,2),rep(9,3),rep(7,2))]
+	MyLty=c(2,3,4,5,1,2,1,2,1,2,3,1,2,1)
 	myLWD=c(rep(2,length(MyLty)))
 	myLWD=ifelse(MyLty==1, 2, 2.5)
 	myLWD=ifelse(MyLty==3, 3, myLWD)
-	myLWD=c(2.5,3,2.5,2.5,2,2.5,2,2.5,2,3,3,2)
+	myLWD=c(2.5,3,2.5,2.5,2,2.5,2,2.5,2,3,3,2,2.5,2)
 	x=read.table(names[1])
 	len=dim(x)[1]/5
 	xvals= x[(len*3+1):(len*4), 1] # this is the frequency, which is in the first column of the SN files
@@ -640,13 +640,14 @@ if(doALL){
 	len=dim(x)[1]/5
 	xvals= x[(len*3+1):(len*4), 1] # this is the frequency, which is in the first column of the SN files
 	xvals=ifelse(xvals > 1, 1.0, xvals-ToSubstractFromFreq)
-	#idxToPlot=which(numGroundTruthSNVs>=200 && xvals<=0.08)
+	#idxToPlot=which(numGroundTruthSNVs>=2000 && xvals<=0.08)
 	idxToPlot=which(xvals<=0.08)
 	#plot_until=10
 	
 	tuned_SN_pdf=paste(eval_dirs[1],"SN_tuned_deepJointSAMvarsc_inlet_lowFreqVariants.pdf",sep="")
 	if ( ! file.exists(tuned_SN_pdf) ){
 		pdf(tuned_SN_pdf,pointsize=3)
+		myLWD=c(rep(6,20))
 		block=3
 		i=1
 		vals = x[(len*(block-1)+1):(len*block), 2]      # this is the sensitivity, which is in the second column of the SN files; Here we take the block "block" of the 
@@ -655,7 +656,7 @@ if(doALL){
 		#plot(cbind(xvals[c(seq(1,plot_until))], vals[c(seq(1,plot_until))]), type="l", col=colors[i], xlab="Variant Frequency", ylab="Sensitivity",lty=MyLty[i],cex.lab=2.5,cex.axis=2.5,lwd=myLWD[i], ylim=c(0,0.55),xlim=c(0.004000,0.046))
 		plot(cbind(c(0,xvals[idxToPlot]),c(0,vals[idxToPlot])), type="l", col=colors[i], xlab="Variant Frequency", ylab="Sensitivity",lty=MyLty[i],cex.lab=2.5,cex.axis=2.5,lwd=myLWD[i], ylim=c(0,0.55),xlim=c(0.00,0.05))
 		#points(cbind(c(0,xvals[idxToPlot]),c(0,vals[idxToPlot])), col=colors[i])
-		abline(v=xvals[idxToPlot],lty=3,col="gray")
+		abline(v=xvals[idxToPlot],lty=3,lwd=myLWD[1],col="gray")
 	
 		for (i in 2:num_tunes)
 		{
@@ -674,8 +675,9 @@ print("Done with Figure 3B")
 
 
 ## Figure 3A in Paper - locRe and binomTest
-if (doALL){
+if (LOCREBINOM){
 	eval_dirs=c(paste(base_dir,"alignments_vsn_k20/variants_default/eval_10000_binomTest_160527/",sep=""),paste(base_dir,"alignments_vsn_k20/variants_default/eval_10000_160527/",sep=""))
+
 	names=c(paste(eval_dirs[1],c(   # binomTest lists:
 					list.files(path=eval_dirs[1],pattern="TU.wCont20.final.RG.50perc_NO_final.RG.50perc_alternative_two.sided.deepSNV.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[1],pattern="TU.wCont20.final.RG.50perc.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf_indel0.eval_SN_summaryFreq$"),
@@ -683,6 +685,7 @@ if (doALL){
 					list.files(path=eval_dirs[1],pattern="TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_cpp_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[1],pattern="TU.wCont20.final.RG.50perc.muTect_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[1],pattern="TU.wCont20.final.RG.50perc.option__noE_samvar_1_2.SOMATIC.vcf.gz_indel0.eval_SN_summaryFreq$"),
+					list.files(path=eval_dirs[1],pattern="sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[1],pattern="TU.wCont20.final.RG.50perc.somaticSniper_SNVs_Raw_qual.noComma.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[1],pattern="TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq$")),sep=""),
 
@@ -693,6 +696,7 @@ if (doALL){
 					list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.muTect_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.option__noE_samvar_1_2.SOMATIC.vcf.gz_indel0.eval_SN_summaryFreq$"),
+					list.files(path=eval_dirs[2],pattern="sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.somaticSniper_SNVs_Raw_qual.noComma.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq$"),
 					
@@ -703,19 +707,21 @@ if (doALL){
 					list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.locRealign.jointSNVMix2_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.locRealign.muTect_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.locRealign.option__noE_samvar_1_2.SOMATIC.vcf.gz_indel0.eval_SN_summaryFreq$"),
+					list.files(path=eval_dirs[2],pattern="sinvict_TU.wCont20.final.RG.50perc.locRealign_vs_NO_final.RG.50perc.locRealign_somatic.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.locRealign.somaticSniper_SNVs_Raw_qual.noComma.vcf_indel0.eval_SN_summaryFreq$"),
 					list.files(path=eval_dirs[2],pattern="TU.wCont20.final.RG.50perc.locRealign.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq$"))
 					,sep=""))
 
-	tools=c("deepSNV", "GATK HP", "GATK UG", "JointSNVMix2", "MuTect", "SAMtools", "SomaticSniper", "VarScan2")
+	tools=c("deepSNV", "GATK HP", "GATK UG", "JointSNVMix2", "MuTect", "SAMtools", "SiNVICT", "SomaticSniper", "VarScan2")
 	print(names)
 	num_tunes=length(names)
 	print(num_tunes)
-	Rawcolors=c(brewer.pal(9,"Set1")[-6])
+	#Rawcolors=c(brewer.pal(9,"Set1")[-6])
+	Rawcolors=c(brewer.pal(9,"Set1")[c(-2,-6)], brewer.pal(9, "Blues")[c(4,8)])[c(1,4,3,9,5,2,8,6,7)]
 	colors=c(Rawcolors,Rawcolors,Rawcolors)
-	colors=c(Rawcolors[c(1,5,4,2,6,3,7,8)],Rawcolors[c(1,5,4,2,6,3,7,8)],Rawcolors[c(1,5,4,2,6,3,7,8)])
+	#colors=c(Rawcolors[c(1,5,4,2,6,3,7,8)],Rawcolors[c(1,5,4,2,6,3,7,8)],Rawcolors[c(1,5,4,2,6,3,7,8)])
 	
-	MyLty=c(rep(2,8),rep(1,8),rep(3,8))
+	MyLty=c(rep(2,9),rep(1,9),rep(3,9))
 	myLWD=c(rep(2,length(MyLty)))
 	myLWD=ifelse(MyLty==1, 2, 2.5)
 	myLWD=ifelse(MyLty==3, 3, myLWD)
@@ -772,7 +778,7 @@ if (doALL){
 				
 		#legend("bottomright", legend=tools, col=colors, lwd=3,cex=2.5)
 	
-		legend("bottomright", legend=c("binomial test","standard","local realignment"),lwd=myLWD[c(1,9,17)],title="Pipeline modifications",lty=MyLty[c(1,9,17)],cex=2.5)
+		legend("bottomright", legend=c("binomial test","standard","local realignment"),lwd=myLWD[c(1,10,19)],title="Pipeline modifications",lty=MyLty[c(1,10,19)],cex=2.5)
 	
 		#legend("bottomright", legend=sub("SOMATIC_paired","",sub("jointSNVMix2_SNVs_Raw.","",sub("_indel0.eval_SN","",sub("TU.wCont20.final.RG.50perc","",basename(names))))), col=colors, lwd=myLWD,cex=2.5,lty=MyLty)
 		dev.off()
@@ -793,13 +799,14 @@ if (doALL){
 	len=dim(x)[1]/5
 	xvals= x[(len*3+1):(len*4), 1] # this is the frequency, which is in the first column of the SN files
 	xvals=ifelse(xvals > 1, 1.0, xvals-ToSubstractFromFreq)
-	#idxToPlot=which(numGroundTruthSNVs>=200 && xvals<=0.08)
+	#idxToPlot=which(numGroundTruthSNVs>=2000 && xvals<=0.08)
 	idxToPlot=which(xvals<=0.08)
 	#plot_until=10
 	
 	tuned_SN_pdf=paste(eval_dirs[2],"SN_locRe_binom_allTools_inlet_lowFreqVariants.pdf",sep="")
 	if ( ! file.exists(tuned_SN_pdf) ){
 		pdf(tuned_SN_pdf,pointsize=3)
+		myLWD=c(rep(6,num_tunes))
 		block=3
 		i=1
 		vals = x[(len*(block-1)+1):(len*block), 2]      # this is the sensitivity, which is in the second column of the SN files; Here we take the block "block" of the 
@@ -807,7 +814,7 @@ if (doALL){
 		print(vals)
 		#plot(cbind(xvals[c(seq(1,plot_until))], vals[c(seq(1,plot_until))]), type="l", col=colors[i], xlab="Variant Frequency", ylab="Sensitivity",lty=MyLty[i],cex.lab=2.5,cex.axis=2.5,lwd=myLWD[i], ylim=c(0,0.55),xlim=c(0.004000,0.046))
 		plot(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])), type="l", col=colors[i], xlab="Variant Frequency", ylab="Sensitivity",lty=MyLty[i],cex.lab=2.5,cex.axis=2.5,lwd=myLWD[i], ylim=c(0,0.55),xlim=c(0.00,0.05))
-		abline(v=xvals[idxToPlot],lty=3,col="gray")
+		abline(v=xvals[idxToPlot],lty=3,lwd=myLWD[1],col="gray")
 
 		for (i in 2:num_tunes)
 		{
@@ -823,7 +830,8 @@ if (doALL){
 }
 
 
-if(doALL){
+
+if(FIGURE1ACOVERAGE){
 	## Like Figure 1A in the paper but taking into account only ground truth SNVs where coverage in normal and tumor is sufficient
 	all_eval_dirs=eval_dir_k20
 	
@@ -834,15 +842,17 @@ if(doALL){
 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq_coveredRegions",sep=""),
 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.muTect_SNVs_Raw.vcf_indel0.eval_SN_summaryFreq_coveredRegions",sep=""),
 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.option__noE_samvar_1_2.SOMATIC.vcf.gz_indel0.eval_SN_summaryFreq_coveredRegions",sep=""),
+			paste(curr_eval_dir,"sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.eval_SN_summaryFreq_coveredRegions",sep=""),
 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.somaticSniper_SNVs_Raw_qual.noComma.vcf_indel0.eval_SN_summaryFreq_coveredRegions",sep=""),
 			paste(curr_eval_dir,"TU.wCont20.final.RG.50perc.bam__varscan2.txt.snp.Somatic_qual.vcf_indel0.eval_SN_summaryFreq_coveredRegions",sep=""))
 
-		tools=c("deepSNV", "GATK HP", "GATK UG", "JointSNVMix2", "MuTect", "SAMtools", "SomaticSniper", "Varscan2")
+		tools=c("deepSNV", "GATK HP", "GATK UG", "JointSNVMix2", "MuTect", "SAMtools", "SiNVICT", "SomaticSniper", "Varscan2")
 		num = length(names)
 		#colors=rainbow(num)
 		#colors=brewer.pal(8,"Accent")
 		colors=c(brewer.pal(9,"Set1")[-6])
 		colors=colors[c(1,5,4,2,6,3,7,8)]
+		colors=c(brewer.pal(9,"Set1")[c(-2,-6)], brewer.pal(9, "Blues")[c(4,8)])[c(1,4,3,9,5,2,8,6,7)]
 		x=read.table(names[1]);
 		len=dim(x)[1]/5
 		xvals= x[(len*3+1):(len*4), 1] # this is the frequency, which is in the first column of the SN files
@@ -900,19 +910,8 @@ if(doALL){
 				#points(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])), col=colors[i])
 			}
 	
-	# 		block=4
-	# 		cnt=3
-	# 		vals = x[(len*(block-1)+1):(len*block), 2] 
-	# 		for (i in 1:num)
-	# 		{
-	# 			x=read.table(names[i]); 
-	# 			vals = x[(len*(block-1)+1):(len*block), 2]
-	# 			lines(cbind(xvals, vals), col=colors[i], lty=myLTY[cnt],lwd=myLWD[cnt])
-	# 		}
-				
 			legend("bottomright",inset=c(-1,-1), legend=tools, col=colors, lwd=3)
 			
-	#		legend("bottomleft",inset=c(-1,-1),legend=c("10%", "5%", "1%"),lwd=myLWD,title="False discovery cutoff",lty=myLTY)
 			legend("bottomleft",inset=c(-1,-1),legend=c("10%", "5%"),lwd=myLWD,title="False discovery cutoff",lty=myLTY)
 			#par(mar=c(5, 4, 4, 2) + 0.1)
 			dev.off()
@@ -948,21 +947,9 @@ if(doALL){
 			}
 	
 	
-	# 		block=4
-	# 		cnt=3
-	# 		vals = x[(len*(block-1)+1):(len*block), 2] 
-	# 		for (i in 1:num)
-	# 		{
-	# 			x=read.table(names[i]); 
-	# 			vals = x[(len*(block-1)+1):(len*block), 2]
-	# 			#lines(cbind(xvals, vals), col=colors[i], lty=myLTY[cnt],lwd=myLWD[cnt])
-	# 		}
-			
 			legend("bottomright", legend=tools, col=colors, lwd=3,cex=2.5)
 			
-			#legend("bottomleft",legend=c("10%", "5%", "1%"),lwd=myLWD,title="False discovery cutoff",lty=myLTY, cex=2.5)
 			legend("bottomleft",legend=c("10%", "5%"),lwd=myLWD,title="False discovery cutoff",lty=myLTY,cex=2.5)
-			#par(mar=c(5, 4, 4, 2) + 0.1)
 			dev.off()
 		}
 		SN_inlet_pdf=paste(curr_eval_dir,"SN_all_twoPrec_10_5_coveredRegions_inlet.pdf",sep="")
@@ -970,10 +957,11 @@ if(doALL){
 			pdf(SN_inlet_pdf,pointsize=3)
 			#par(xpd=T, mar=par()$mar+c(6,6,0,6))
 			cnt=1
+			myLWD=c(6,6,6,6,6,6,6,6,6,6,6,6,6)
 			i=1
 			plot_untdxToPlotl=10	
 			numGroundTruthSNVs=x[(len*3+1):(len*4), 3]
-			#idxToPlot=which(numGroundTruthSNVs>=200 && xvals<=0.08)
+			#idxToPlot=which(numGroundTruthSNVs>=2000 && xvals<=0.08)
 			idxToPlot=which(xvals<=0.08)
 
 			block=3
@@ -984,7 +972,7 @@ if(doALL){
 			print(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])))
 			plot(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])), type="l", col=colors[1], xlab="Variant Frequency", ylab="Sensitivity",lty=myLTY[cnt],ylim=c(0,0.55),lwd=myLWD[cnt],cex.lab=2.5,cex.axis=2.5,xlim=c(0.00,0.05))
 			#points(cbind(c(0,xvals[idxToPlot]), c(0,vals[idxToPlot])),col=colors[1])
-			abline(v=xvals[idxToPlot],lty=3,col="gray")
+			abline(v=xvals[idxToPlot],lty=3,lwd=myLWD[1],col="gray")
 	
 			for (i in 2:num)
 			{

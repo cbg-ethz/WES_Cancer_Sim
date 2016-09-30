@@ -47,8 +47,10 @@ if [ ! -f $genomeFractionCoverage ]; then
 	fn_out=${logDir}genomeFrac_job_${bamShort}.o
 	if [ ! -f $fn_out ]; then
 		RStatCov=$outputDir/quality_control_default/coverage/perBaseCoverage_${bamShort}_R.txt
-		command="$covStatScript $RStatCov > $genomeFractionCoverage"
-		submit "$command" --tag genomeFrac_${bamShort} --fn-out $fn_out --queue mpi01.q
+		if [ -f $RStatCov ]; then
+			command="$covStatScript $RStatCov > $genomeFractionCoverage"
+			submit "$command" --tag genomeFrac_${bamShort} --fn-out $fn_out --queue mpi01.q
+		fi
 	fi
 fi
 
@@ -63,11 +65,15 @@ do
 	currOutDir=$qualityOut/`basename ${curr_bam%.bam}`
 	if [ ! -d $currOutDir ]; then
 		command="$qualimap bamqc -bam $curr_bam --feature-file $bed_file_qualimap -outdir $currOutDir -outfile `basename ${curr_bam%.bam}`.report.pdf -outformat PDF -nt 1 --java-mem-size=4G"
-		submit "$command" --tag qualimap`basename ${curr_bam%.bam}` --log-dir $logDir --queue mpi01.q
+		echo $command
+		submit "$command" --tag qualimap`basename ${curr_bam%.bam}` --log-dir $logDir --queue mpi01.q --fn-out $fn_out 
+		#eval $command
+		#exit 0
 	fi
 done
+exit 0
 covSummary=$qualityOut/coverage_summary.txt
-if [ ! -f $covSummary ]; then
+if [ ! -f $covSummary -o ! -s $covSummary ]; then # if does not exist or if empty
 	for i in `find $qualityOut/ -name genome_results.txt`; do
 		sampleName=$(echo `dirname $i | tr '/' ' ' | awk '{print $NF}'`)
 		ln -s $i `dirname $i`/${sampleName}.txt 

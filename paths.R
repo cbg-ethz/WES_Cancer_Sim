@@ -9,3 +9,4 @@ eval_dir_combi=paste(algmt_k20_dir,"/variants_combined/eval_10000_160527/",sep="
 eval_dir_binom=paste(algmt_k20_dir,"/variants_default/eval_10000_binomTest_160527/",sep="")
 eval_dir_snk1="<pathTo>/sim_cancer_exome/data/subsample/final_vcfs_0.25/tree_blat_i70_s60/alignments_sn_k1/variants_default/eval_10000_160527/"
 overlapDir=overlap_dir
+eval_dir_k20_wCNVs="<pathTo>/exome_seq_pipeline_eval/simulation_wCNVs_n_Aneuploidy/alignments_vsn_k20/variants_default/eval_10000_160527/"

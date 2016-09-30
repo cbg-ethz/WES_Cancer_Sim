@@ -5,7 +5,7 @@ overlaps_main.sh: creates the 10%, 5%, and 1% overlap files and extracts the num
 extractOverlaps.sh: generates the vcf file of the overlap, in order to be able to evaluate the overlap of all tools; calls the script getSets.R and the porgram createOriginalVCF.java
 
 ###
-# script to run for running all combinations of the five best tools:
+# script for running all combinations of all nine tools:
 start_all_combinations.sh: starts all combis; calls the script combininglistsbetter_Automated.R
 
 ###

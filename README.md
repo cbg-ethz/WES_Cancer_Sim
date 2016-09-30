@@ -1,17 +1,13 @@
-# WES_Cancer_Sim
+
+# WES_Cancer_Sim:
+
+# rank-combination_pipeline:
+- contains the R script for combining several tools with the __rank-combination__
+
 
 # sim_cancer:
-- contains the scripts for the simulation, starting the variant callers, the combinations and overlaps, as well as the evaluation
-- to run the analysis, refer to the 'README' in the respective subfolder in the following order:
-	1. ./sim_cancer/simulate_WES_cancerSample/
-	2. ./sim_cancer/var_callers/
-	3. ./sim_cancer/combis_overlaps/
-	4. ./sim_cancer/eval_vcf/
+- contains the scripts that were used for running the simulation, the variant callers, the combinations, and the evaluation
+- see ./sim_cancer/README.md for more information
 
-To do before running: add the paths to the paths.sh and paths.R file, and compile all programs
-
-# cancer_data_pipeline:
-- contains the scripts for alignment, variant calling, checking the coverage, and processing of the fastq/bam/variant files
-- they are called by scripts in the sim_cancer subfolders
-
+![alt text](https://github.com/cbg-ethz/WES_Cancer_Sim/sim_cancer/Figure1.pdf "Workflow of the comparison of the nine variant callers.")
 

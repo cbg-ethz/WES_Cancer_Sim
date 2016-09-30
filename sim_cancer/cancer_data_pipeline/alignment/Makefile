@@ -1,5 +1,5 @@
 
-importedScriptsDir=../../sim_cancer/eval_vcf/imported_scripts/
+importedScriptsDir=../eval_vcf/imported_scripts/
 
 INCLUDE_DIRS=${importedScriptsDir}
 

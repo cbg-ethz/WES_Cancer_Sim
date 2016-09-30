@@ -74,7 +74,7 @@ statusDir=$outputDir/status
 echo $bamDir
 echo $variantDir
 
-if [ ! -f $bamDir/TU.wCont20.final.RG.100perc.bam ]; then 
+if [ ! -f $bamDir/TU.wCont20.final.RG.50perc.bam ]; then 
 	echo "start process alignments in 20 seconds"
 	sleep 20
 	echo "source ${gitDir}/simulate_WES_cancerSample/process_alignments.sh"
@@ -89,7 +89,7 @@ fi
 
 
 ### perform quality control 
-if true; then
+if false; then
 	log_dir=$qualityOut/logs/
 	for curr_bam in $bamDir/TU.wCont[0-9]0.final.RG.*$bam_ending $bamDir/NO_final.RG.*$bam_ending
 	do
@@ -100,12 +100,13 @@ if true; then
 			continue;
 		fi
 		command="source `find $SNV_DIR -name coverage.sh` ; source `find $SNV_DIR -name paths.sh` ; coverage $curr_bam $bed_file $qualityOut"
-		submit "$command" --tag cov_stats --log-dir $log_dir --queue $queue
+		submit "source `find $SNV_DIR -name paths.sh`; source `find $SNV_DIR -name coverage.sh`; $command" --tag cov_stats --log-dir $log_dir --queue $queue --fn-out $fn_out
 	done
 fi
 
 ####################################
 #### call variants # the different "percent files"
+
 
 perc=50
 cont=20
@@ -162,6 +163,12 @@ do
 	# for debugging purposes
 	if false; then
 		if [ ! $perc == 12 -o ! $cont == 20 ]; then
+			continue
+		fi
+	fi
+
+	if [[ $bamDir == *sn_k1* || $bamDir == *Aneuploidy* ]]; then 
+		if [ ! $perc == 50 -o ! $cont == 20 ]; then
 			continue
 		fi
 	fi
@@ -223,16 +230,16 @@ do
 		command="source `find $SNV_DIR -name samtools_1_2_variants.sh` ; source `find $SNV_DIR -name paths.sh`; samtools_1_2_variants $TU_bam xxx $fn_genome $variantDir $NO_bam --opts --no-E "
 		submit "$command" --fn-out $fn_out --tag sam_1_2$perc --work-dir $SNV_DIR --queue $queue
 	fi
-	echo "wait a little bit such that the next time samtools_1_2 is invoked, it does not start again with the separate TU, NO calls"
-	sleep 10
-	# also for the paired calls TU+NO together:
-	fn_out=$log_dir/samvar_1_2_pairedTUNO_`basename ${TU_bam%.bam}`.o
-	if [ -f $fn_out ]; then
-			echo "$fn_out already exists."
-	else
-		command="source `find $SNV_DIR -name samtools_1_2_variants.sh` ; source `find $SNV_DIR -name paths.sh`; samtools_1_2_variants $TU_bam xxx $fn_genome $variantDir $NO_bam --opts --no-E --paired"
-		submit "$command" --fn-out $fn_out --tag sam_1_2$perc --work-dir $SNV_DIR --queue $queue
-	fi
+	#echo "wait a little bit such that the next time samtools_1_2 is invoked, it does not start again with the separate TU, NO calls"
+	#sleep 10
+	## also for the paired calls TU+NO together:
+	#fn_out=$log_dir/samvar_1_2_pairedTUNO_`basename ${TU_bam%.bam}`.o
+	#if [ -f $fn_out ]; then
+	#		echo "$fn_out already exists."
+	#else
+	#	command="source `find $SNV_DIR -name samtools_1_2_variants.sh` ; source `find $SNV_DIR -name paths.sh`; samtools_1_2_variants $TU_bam xxx $fn_genome $variantDir $NO_bam --opts --no-E --paired"
+	#	submit "$command" --fn-out $fn_out --tag sam_1_2$perc --work-dir $SNV_DIR --queue $queue
+	#fi
 
 
 	#varscan2
@@ -276,7 +283,8 @@ do
 		echo "$fn_out already exists."
 	else
 		#command="source `find $SNV_DIR -name deepSNV_variants.sh` ; source `find $SNV_DIR -name paths.sh` ; deepSNV_variants $TU_bam $fn_genome $variantDir $NO_bam $bed_file"
-		command="source `find $SNV_DIR -name deepSNV_automated_variants.sh` ; source `find $SNV_DIR -name paths.sh` ; deepSNV_automated_variants $bed_file $TU_bam $NO_bam $variantDir --also-vcf true"
+		bed_file_deep=${bed_file%.bed}_woLastColumn.bed # deepSNV needs just exaclty the three columns: chr, startPos, endPos
+		command="source `find $SNV_DIR -name deepSNV_automated_variants.sh` ; source `find $SNV_DIR -name paths.sh` ; deepSNV_automated_variants $bed_file_deep $TU_bam $NO_bam $variantDir --also-vcf true"
 		submit "$command" --fn-out $fn_out --tag deepSNV$perc --work-dir $SNV_DIR --queue $queue
 	fi
 
@@ -307,8 +315,19 @@ do
 		fi
 	else
 		command="source `find $SNV_DIR -name gatkHPCaller_variants.sh` ; source `find $SNV_DIR -name paths.sh` ; echo $TU_bam >> $fn_out; hostname >> $fn_out ; gatkHPCaller_variants $TU_bam '' $fn_genome $variantDir $NO_bam" 
-		submit "$command"  --tag gatk_`basename ${TU_bam%.bam}` --fn-out $fn_out --queue $queue
+		submit "$command"  --tag gatkHPCaller_`basename ${TU_bam%.bam}` --fn-out $fn_out --queue $queue
 	fi
+
+	# sinvict
+	################################################################################
+	fn_out=${log_dir}sinvict_job_`basename ${TU_bam%.bam}`.o
+	if [ -f $fn_out ]; then
+		echo "$fn_out already exists."
+	else
+		command="source `find $SNV_DIR -name sinvict_variants.sh`; source `find $SNV_DIR -name paths.sh` ; sinvict_variants $TU_bam $fn_genome $variantDir $NO_bam $bed_file "
+		submit "$command" --fn-out $fn_out --tag sinvict$perc --work-dir $SNV_DIR --queue $queue
+	fi
+
 done
 exit 0
 

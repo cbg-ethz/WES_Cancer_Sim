@@ -1,0 +1,162 @@
+import glob
+import os
+
+# Description: This pipeline runs the variant callers deepSNV, JointSNVMix2, MuTect, SiNVICT, and VarScan2
+#		and combines the results with the 'rank-combination'.
+# Instructions: Please fill in the required paths below.
+# Assumptions: 
+#	1) All tumor bam files in the directory <BAMDIR> are named like tumor_<sampleName>.bam
+#	2) The matched normal bam file in the same directory <BAMDIR> is named normal_<sampleName>.bam
+#	3) All bam files are indexed and the index is in the same directory <BAMDIR> 
+#	and is named tumor_<sampleName>.bam.bai, or normal_<sampleName>.bam.bai, respectively
+
+# TO FILL IN:
+# general paths
+BAMDIR = # directory with bam files
+OUTDIR = # the output directory
+REFGENOME = # the reference genome used for alignment
+BEDFILE = # the bed file which contains the regions of the targeted exome sequencing
+
+# tools to be used
+
+
+
+
+
+##############################################################################################################
+# Below this point, the code does not need to be adjusted.
+##############################################################################################################
+
+VARDIR = OUTDIR + '/individual_variant_calls/'
+FILES = glob.glob(BAMDIR + 'tumor_*.bam') # all tumor bam files
+FILENAMES = [name.replace('.bam', '').replace(BAMDIR,'').strip() for name in FILES] # all tumor bam files
+
+def create_dirs():
+	all_new_dirs = [ OUTDIR , VARDIR ]
+	for thisDir in all_new_dirs:
+		print(thisDir + ' will be created\n')
+		if not os.path.exists(thisDir):
+			os.makedirs(thisDir)
+create_dirs
+
+rule all:
+	input:
+		expand(OUTDIR + '{sample}_variants.txt', sample=FILENAMES)
+
+def find_matched_normal(wildcards):
+	matched_normal_temp=wildcards.sample 
+	matched_normal=BAMDIR + matched_normal_temp.replace('tumor','normal') + '.bam'
+	return matched_normal
+
+def find_matched_normal_idx(wildcards):
+	matched_normal_temp=wildcards.sample 
+	matched_normal=BAMDIR + matched_normal_temp.replace('tumor','normal') + '.bam.bai'
+	return matched_normal
+
+
+
+
+	input:
+		bamfile = BAMDIR + '{sample}.bam',
+		bamfileIdx = BAMDIR + '{sample}.bam.bai',
+		REGIONS = PATHTOSPECIFICBEDS + '{bedfile}.bed',
+		tool = QUALIMAPTOOL,
+		BEDOUTDIR = QUALIMAPOUT + '/{bedfile}/',
+		OUTDIR = QUALIMAPOUT + '/{bedfile}/{sample}/'
+	output:
+		QUALIMAPOUT + '/{bedfile}/{sample}/{sample}.report.pdf',
+		QUALIMAPOUT + '/{bedfile}/{sample}/genome_results.txt'
+	params:
+		lsfoutfile = QUALIMAPOUT + '/{bedfile}/{sample}/{sample}.qualimap.lsfout.log',
+		lsferrfile = QUALIMAPOUT + '/{bedfile}/{sample}/{sample}.qualimap.lsferr.log',	
+		jobname = 'qualimap_{sample}_{bedfile}',
+		OUTFILE = '{sample}.report.pdf',
+		JAVAMEM = '4G'
+	threads:
+		1
+	shell:
+		(' {input.tool} bamqc -bam {input.bamfile} --feature-file {input.REGIONS} -outdir {input.OUTDIR} -outfile {params.OUTFILE} ' + 
+		 '   -outformat PDF -nt {threads} --java-mem-size={params.JAVAMEM} ')
+
+
+
+# rule coverage_stats:
+# 	input:
+# 		tumor = BAMDIR + '{sample}.bam',
+# 		tumorIdx = BAMDIR + '{sample}.bam.bai',
+# 		regions = BEDFILE,
+# 		chrominfo = CHROMINFO
+# 	output:
+# 		COVERAGESTATSOUT + '{sample}_cov_stats.txt',
+# 		COVERAGESTATSOUT + '/coverage/{sample}.bw'
+# 	params:
+# 		lsfoutfile = COVERAGESTATSOUT + '{sample}.cov_stats.lsfout.log',
+# 		lsferrfile = COVERAGESTATSOUT + '{sample}.cov_stats.lsferr.log',
+# 		outdir = COVERAGESTATSOUT
+# 	benchmark:
+# 		COVERAGESTATSOUT + '{sample}.cov_stats.benchmark'
+# 	threads:
+# 		1
+# 	shell:
+# 		(GITDIR + '/quality_control/start_coverage_bedtools.sh ' + GITDIR + ' {input.chrominfo} {input.tumor} {input.regions} {params.outdir}')
+
+
+localrules: create_dirs_get_bedGraph
+rule create_dirs_get_bedGraph:
+	output:
+		bedGraphFolder = BEDGRAPHOUT,
+		bigWigFolder = BIGWIGOUT
+	shell:
+		' mkdir -p {output.bedGraphFolder}; mkdir -p {output.bigWigFolder} '
+
+rule get_bedGraph:
+	input:
+		tumor = BAMDIR + '{sample}.bam',
+		tumorIdx = BAMDIR + '{sample}.bam.bai',
+		chromInfo = CHROMINFO,
+		genomeCoverageBed = GENOMECOVBED,
+		OUTDIR = BEDGRAPHOUT
+	output:
+		BEDGRAPHOUT + '{sample}.bedGraph'
+	params:
+		lsfoutfile = BEDGRAPHOUT + '{sample}.bedGraph.lsfout.log',
+		lsferrfile = BEDGRAPHOUT + '{sample}.bedGraph.lsferr.log',
+		jobname = 'bedGraph_{sample}',
+	benchmark:
+		BEDGRAPHOUT + '{sample}.bedGraph.benchmark'
+	threads:
+		1
+	shell:
+		' {input.genomeCoverageBed} -ibam {input.tumor} -bg -g {input.chromInfo} > {output} '
+
+
+localrules: bedGraph_noPATCH
+rule bedGraph_noPATCH:
+	input:
+		BEDGRAPHOUT + '{sample}.bedGraph'
+	output:
+		BEDGRAPHOUT + '{sample}.noPATCH.bedGraph'
+	shell:
+		'cat {input} | grep -v PATCH > {output}'
+
+
+rule get_bigWig_noPATCH:
+	input:
+		bedGraph = BIGWIGOUT + '{sample}.noPATCH.bedGraph',
+		chromInfo = CHROMINFO,
+		wigToBigWig = WIGTOBIGWIG,
+		OUTDIR = BIGWIGOUT
+	output:
+		BIGWIGOUT + '{sample}.bw'
+	params:
+		lsfoutfile = BIGWIGOUT + '{sample}.bw.lsfout.log',
+		lsferrfile = BIGWIGOUT + '{sample}.bw.lsferr.log',
+		jobname = 'bw_noPATCH_{sample}'
+	benchmark:
+		BIGWIGOUT + '{sample}.bw.benchmark'
+	threads:
+		1
+	shell:
+		'{input.wigToBigWig} {input.bedGraph} {input.chromInfo} {output}'
+
+

@@ -211,16 +211,4 @@ if false ; then
 	exit 0
 fi
 
-## reset secondary alignment flag
-for f in $align_dir/bam/*NO_final.sorted.bam; do
-	fn_res=${f%.bam}.no_secondary.ALL_MAPQ30.bam
-	if [ ! -f $fn_res ]; then 
-		echo create $fn_res
-		time samtools view $f -h | awk '{OFS="\t"; flag=$2; if (flag>=2048) flag-=2048; if (flag>=1024) flag-=1024; if (flag>=512) flag-=512; if (flag>=256) $2-=256; if (NF>5 && $5<30) $5=30;  print }' | samtools view -bS '-' > $fn_res
-	fi
-	if [ ! -f $fn_res.bai ]; then 
-		echo "$samtools index $fn_res"
-		time $samtools index $fn_res 
-	fi
-done
 

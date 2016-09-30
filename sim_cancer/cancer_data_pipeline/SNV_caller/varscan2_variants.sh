@@ -89,13 +89,13 @@ function varscan2_variants()
 	 	fi
 	
 		if [ ! -f ${bam_tumor_prefix%.bam}_varscan2.txt.snp.Somatic.hc.vcf ]; then
-			echo "`find . -name varscan2ToVcf.sh` ${bam_tumor_prefix%.bam}_varscan2.txt.snp.Somatic.hc $fn_genome"
-			time `find . -name varscan2ToVcf.sh` ${bam_tumor_prefix%.bam}_varscan2.txt.snp.Somatic.hc $fn_genome
+			echo "`find ${gitDir} -name varscan2ToVcf.sh` ${bam_tumor_prefix%.bam}_varscan2.txt.snp.Somatic.hc $fn_genome"
+			time `find ${gitDir} -name varscan2ToVcf.sh` ${bam_tumor_prefix%.bam}_varscan2.txt.snp.Somatic.hc $fn_genome
 		fi
 	
 		if [ ! -f ${bam_tumor_prefix%.bam}_varscan2.txt.snp.Somatic.vcf ]; then
-			echo "`find . -name varscan2ToVcf.sh` ${bam_tumor_prefix%.bam}_varscan2.txt.snp.Somatic $fn_genome"
-			time `find . -name varscan2ToVcf.sh` ${bam_tumor_prefix%.bam}_varscan2.txt.snp.Somatic $fn_genome
+			echo "`find ${gitDir} -name varscan2ToVcf.sh` ${bam_tumor_prefix%.bam}_varscan2.txt.snp.Somatic $fn_genome"
+			time `find ${gitDir} -name varscan2ToVcf.sh` ${bam_tumor_prefix%.bam}_varscan2.txt.snp.Somatic $fn_genome
 		fi
 
 	done

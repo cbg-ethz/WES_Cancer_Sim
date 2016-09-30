@@ -3,9 +3,20 @@
 currScriptDir=`dirname $0`
 source `find ${currScriptDir}/../../ -name paths.sh`
 
-out_dir=$base_dir
+wCNVs=$1
+
+if [ "$1" == "wCNVs" ]; then
+	out_dir=$base_dir_wCNVs
+	vcf_dir=$vcf_sim_dir_wCNVs
+else
+	out_dir=$base_dir
+	vcf_dir=$vcf_sim_dir
+fi
+
+echo $out_dir
+echo $vcf_dir
+
 mkdir -p $out_dir
-vcf_dir=$vcf_sim_dir
 
 #####
 ## First:
@@ -17,6 +28,7 @@ vcf_dir=$vcf_sim_dir
 #####
 
 max_num_jobs=50
+#eval_file_ending=FN_absolute_counts
 eval_file_ending=SN
 
 queue="mpi01.q"
@@ -31,11 +43,11 @@ wait_for_jobs eval_SNV --max-num $max_num_jobs
 
 # # ##############################################
 # # ## Assessing the "PASS" label of mutect:
-# # ## cd $base_dir
+# # ## cd $out_dir
 # for i in  ./alignments_vsn_k20/variants_default/TU.wCont20.final.RG.*perc.muTect_SNVs_Raw.vcf; do echo $i; if [ ! -f ${i%_Raw.vcf}.noReject.vcf ]; then cat $i | awk '$7!="REJECT"' > ${i%_Raw.vcf}.noReject.vcf;  fi; done
 # # ## for i in ./alignments_vsn_k20/variants_default/TU.wCont20.final.RG.*perc.muTect_SNVs_Raw.vcf; do echo $i; if [ ! -f ${i%_Raw.vcf}.noPass.vcf ]; then cat $i | awk '$7!="PASS"' > ${i%_Raw.vcf}.noPass.vcf;  fi; done
 # # ## cd -
-# var_dir=$base_dir/alignments_vsn_k20/variants_default/
+# var_dir=$out_dir/alignments_vsn_k20/variants_default/
 # true_tag=""
 # for perc in 12 25 50 75 100; do
 # 	cont=20
@@ -48,27 +60,56 @@ wait_for_jobs eval_SNV --max-num $max_num_jobs
 # 	fn_out=$eval_dir/logs/`basename $tool`_${RANDOM}.o
 # 	mkdir -p $eval_dir
 # 	fn_SN=$eval_dir/`basename $tool`_indel0.eval_${eval_file_ending}
-# 	command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --only-sn-auprc --pathToBam $pathToBam --pathToBed $pathToBed"
+# 	command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --only-sn-auprc --pathToBam $out_dir --pathToBed $pathToBed"
 # 	submit "$command" --tag eval_SNV --log-dir $eval_dir/logs --queue $queue --fn-out $fn_out
 # 	echo "$command"
 # done
 # exit 0
 # # ##############################################
 
+# ##################################################
+# ## Assessing the different levels of SiNVICT
+# ## cat ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf | grep -v ^# | awk '{print $6}' | sort | uniq -c
+# ## cat ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf | grep ^# > ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_HEADER
+# ## cat ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf | grep -v ^# | awk '$6 == 4' > ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.Level4.vcf_unheadered
+# ## cat ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf | grep -v ^# | awk '$6 == 2' > ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.Level2.vcf_unheadered
+# ## cat ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf | grep -v ^# | awk '$6 == 1' > ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.Level1.vcf_unheadered
+# ## cat ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_HEADER ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.Level4.vcf_unheadered > ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.Level4.vcf
+# ## cat ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_HEADER ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.Level2.vcf_unheadered > ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.Level2.vcf
+# ## cat ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_HEADER ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.Level1.vcf_unheadered > ./alignments_vsn_k20/variants_default/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.Level1.vcf
+# var_dir=$out_dir/alignments_vsn_k20/variants_default/
+# true_tag=""
+# perc=50
+# cont=20
+# fn_bam=$var_dir/../bam/TU.wCont${cont}.final.RG.${perc}perc.bam
+# fn_bam_normal=$var_dir/../bam/NO_final.RG.${perc}perc.bam
+# for level in 1 2 4; do
+# 	tool=$var_dir/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.Level${level}.vcf
+# 	eval_dir=$var_dir/eval_${noY_}${max_cnt_normal}_160527	
+# 	fn_out=$eval_dir/logs/`basename $tool`_${RANDOM}.o	
+# 	mkdir -p $eval_dir
+# 	command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --only-sn-auprc --pathToBam $out_dir --pathToBed $pathToBed"
+# 	submit "$command" --tag eval_SNV --log-dir $eval_dir/logs --queue $queue --fn-out $fn_out
+# 	echo "$command"
+# done
+# exit 0
+# ##################################################
+
+
 ## Set the runs you wish to evaluate to 'true'
-default=true
+default=false
 tuned=false
 locRe=false
 combis=false
-overlps=false
+overlps=true
 binomT=false
 repeatS=false
 
 if $default; then
 	# first the default runs:
-	for align_version in sn_k1 vsn_k20 
-	do	
-	var_dir=$base_dir/alignments_${align_version}/variants_default/
+	for align_version in vsn_k20 sn_k1 vsn_k20 
+	do
+	var_dir=$out_dir/alignments_${align_version}/variants_default/
 	for true_tag in "" ; do
 
 		for perc in 50 12 25 75 100; do
@@ -76,6 +117,12 @@ if $default; then
 				if [ $cont != 20 -a $perc != 50 ]; then
 					continue
 				fi
+
+				if [[ $out_dir == *Aneuploidy*  || $align_version == "sn_k1" ]]; then
+			                if [ ! $perc == 50 -o ! $cont == 20  ]; then
+			                        continue
+			                fi
+			        fi
 
 				fn_bam=$var_dir/../bam/TU.wCont${cont}.final.RG.${perc}perc.bam
 				fn_bam_normal=$var_dir/../bam/NO_final.RG.${perc}perc.bam 
@@ -88,8 +135,9 @@ if $default; then
 				gatkHPCaller="$var_dir/TU.wCont$cont.final.RG.${perc}perc${true_tag}.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf"
 				deepSNV="$var_dir/TU.wCont${cont}.final.RG.${perc}perc${true_tag}_NO_final.RG.${perc}perc${true_tag}_alternative_two.sided.deepSNV.vcf"
  				mutect="$var_dir/TU.wCont$cont.final.RG.${perc}perc${true_tag}.muTect_SNVs_Raw.vcf"
+				sinvict="$var_dir/sinvict_TU.wCont${cont}.final.RG.${perc}perc_vs_NO_final.RG.${perc}perc_somatic.vcf"
 			
-				for tool in $sniper $jointSNV $sam_1_2 $varscan $gatk $deepSNV $mutect $gatkHPCaller; do
+				for tool in $sniper $jointSNV $sam_1_2 $varscan $gatk $deepSNV $mutect $gatkHPCaller $sinvict; do
 					vcf_name=`basename $tool`
 
 					cnt_jobs_total=$((cnt_jobs_total+1))
@@ -117,17 +165,15 @@ if $default; then
 						fi
 					fi
 
-					if [ $cont == 20 -a $perc == 50 ]; then
-						command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --pathToBam $pathToBam --pathToBed $pathToBed"
+					if [ $cont == 20 -a $perc == 50 ]; then 
+						command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --pathToBam $out_dir --pathToBed $pathToBed"
 					else
-						command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --only-sn-auprc --pathToBam $pathToBam --pathToBed $pathToBed"
+						command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --only-sn-auprc --pathToBam $out_dir --pathToBed $pathToBed " 
 					fi
 					echo "$command"
 					submit "$command" --tag eval_SNV --log-dir $eval_dir/logs --queue $queue --fn-out $fn_out
 					cnt_jobs_TODO=$((cnt_jobs_TODO+1))
 					wait_for_jobs eval_SNV --max-num $max_num_jobs
-exit 0
-
 				done
 			done
 		done
@@ -140,13 +186,13 @@ fi
 
 if $tuned; then	
 	# now the tuned runs:
-	for var_dir in $base_dir/alignments_vsn_k20/variants_tuned/; do
+	for var_dir in $out_dir/alignments_vsn_k20/variants_tuned/; do
 		perc=50
 		cont=20
 		fn_bam=$var_dir/../bam/TU.wCont${cont}.final.RG.${perc}perc.bam
 		fn_bam_normal=$var_dir/../bam/NO_final.RG.${perc}perc.bam 
 	
-		for vcf in `ls $var_dir/*joint*.vcf | grep -v combined` `ls $var_dir/*deep*.vcf | grep -v combined` `ls $var_dir/*samvar*SOMATIC*.gz` `ls $var_dir/*varscan*qual.vcf | grep -v combined` ; do
+		for vcf in `ls $var_dir/*joint*.vcf | grep -v combined` `ls $var_dir/*deep*.vcf | grep -v combined` `ls $var_dir/*samvar*SOMATIC*.gz` `ls $var_dir/*varscan*qual.vcf | grep -v combined` `ls $var_dir/sinvict*.vcf | grep -v combined` ; do
 			cnt_jobs_total=$((cnt_jobs_total+1))
 		
 			eval_dir=$var_dir/eval_${noY_}${max_cnt_normal}_160527
@@ -170,7 +216,7 @@ if $tuned; then
 				fi
 			fi
 	
-			command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $vcf --bam $fn_bam --bam-normal $fn_bam_normal  --only-sn-auprc --pathToBam $pathToBam --pathToBed $pathToBed "
+			command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $vcf --bam $fn_bam --bam-normal $fn_bam_normal  --only-sn-auprc --pathToBam $out_dir --pathToBed $pathToBed "
 			echo "$command"
 			submit "$command" --tag eval_SNV --log-dir $eval_dir/logs --queue $queue
 			cnt_jobs_TODO=$((cnt_jobs_TODO+1))
@@ -184,7 +230,7 @@ fi
 
 if $locRe; then
 	# now the local realignment runs
-	for var_dir in $base_dir/alignments_vsn_k20/variants_default/; do
+	for var_dir in $out_dir/alignments_vsn_k20/variants_default/; do
 		perc=50
 		cont=20
 		fn_bam=$var_dir/../bam/TU.wCont${cont}.final.RG.${perc}perc.bam
@@ -199,9 +245,10 @@ if $locRe; then
 			gatkHPCaller="$var_dir/TU.wCont$cont.final.RG.${perc}perc${true_tag}.locRealign.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf"
 	 		deepSNV="$var_dir/TU.wCont$cont.final.RG.${perc}perc${true_tag}.locRealign_NO_final.RG.${perc}perc.locRealign_alternative_two.sided.deepSNV.vcf"
 	 		mutect="$var_dir/TU.wCont$cont.final.RG.${perc}perc${true_tag}.locRealign.muTect_SNVs_Raw.vcf"
+			sinvict="$var_dir/sinvict_TU.wCont${cont}.final.RG.${perc}perc.locRealign_vs_NO_final.RG.${perc}perc.locRealign_somatic.vcf"
 	
 	
-			for vcf in $jointSNV $varscan $sniper $sam_1_2 $gatk $gatkHPCaller $deepSNV $mutect ; do
+			for vcf in $jointSNV $varscan $sniper $sam_1_2 $gatk $gatkHPCaller $deepSNV $mutect $sinvict ; do
 				cnt_jobs_total=$((cnt_jobs_total+1))
 		
 				eval_dir=$var_dir/eval_${noY_}${max_cnt_normal}_160527
@@ -225,7 +272,7 @@ if $locRe; then
 					fi
 				fi
 	
-				command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $vcf --bam $fn_bam --bam-normal $fn_bam_normal  --only-sn-auprc --pathToBam $pathToBam --pathToBed $pathToBed "
+				command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $vcf --bam $fn_bam --bam-normal $fn_bam_normal  --only-sn-auprc --pathToBam $out_dir --pathToBed $pathToBed "
 				echo "$command"
 				submit "$command" --tag eval_SNV --log-dir $eval_dir/logs --queue $queue
 				cnt_jobs_TODO=$((cnt_jobs_TODO+1))
@@ -233,19 +280,19 @@ if $locRe; then
 			done
 		done
 	done
-	exit 0
 fi
 
 	
 if $combis; then	
 	# now the combinations
-	for curr_dir in $base_dir/alignments_vsn_k20/variants_combined/; do
+	#for curr_dir in $out_dir/alignments_vsn_k20/variants_combined/; do
+	for curr_dir in $out_dir/alignments_vsn_k20/variants_combined_sinvict/; do
 		perc=50
 		cont=20
 		fn_bam=$curr_dir/../bam/TU.wCont${cont}.final.RG.${perc}perc.bam
 		fn_bam_normal=$curr_dir/../bam/NO_final.RG.${perc}perc.bam
 	
-		for vcf in `find $curr_dir -name combinedlistbetter_*prod.vcf | grep -v eval | grep -v oldComb`; do
+		for vcf in `find $curr_dir -name combinedlistbetter_*prod.vcf | grep -v eval_1000 | grep -v oldComb`; do
 	
 			echo $vcf
 	
@@ -274,7 +321,7 @@ if $combis; then
 					echo $fn_SN does not exist
 				fi
 			fi
-			command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $vcf --bam $fn_bam --bam-normal $fn_bam_normal  --only-sn-auprc --pathToBam $pathToBam --pathToBed $pathToBed"
+			command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $vcf --bam $fn_bam --bam-normal $fn_bam_normal  --only-sn-auprc --pathToBam $out_dir --pathToBed $pathToBed"
 			echo "$command"
 			submit "$command" --tag eval_SNV --log-dir $eval_dir/logs --queue $queue --fn-out $fn_out
 			cnt_jobs_TODO=$((cnt_jobs_TODO+1))
@@ -286,17 +333,17 @@ fi
 
 if $overlps; then
 	## now the overlaps
-	for var_dir in $overlapDir/specific_overlaps/overlaps; do
+	#for var_dir in $overlapDir/specific_overlaps/overlaps; do
 	#for var_dir in $overlapDir/SNV_lists_fdr01_1percent/overlaps/allOverlapsVennTop5ToolsExtractLists/ $overlapDir/SNV_lists_fdr05_5percent/overlaps/allOverlapsVennTop5ToolsExtractLists/ $overlapDir/SNV_lists_fdr10_10percent/overlaps/allOverlapsVennTop5ToolsExtractLists/ ; do
+	for var_dir in $overlapDir/all_pairwise_overlaps/pairwise_overlaps/; do
 
-		algnmt_vsn_k20=$base_dir/alignments_vsn_k20/
+		algnmt_vsn_k20=$out_dir/alignments_vsn_k20/
 		perc=50
 		cont=20
 		fn_bam=$algnmt_vsn_k20/bam/TU.wCont${cont}.final.RG.${perc}perc.bam
 		fn_bam_normal=$algnmt_vsn_k20/bam/NO_final.RG.${perc}perc.bam 
 
 		for vcf in $var_dir/*original*.vcf; do
-
 			echo $vcf
 
 			cnt_jobs_total=$((cnt_jobs_total+1))
@@ -323,7 +370,7 @@ if $overlps; then
 					echo $fn_SN does not exist
 				fi
 			fi
-			command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $vcf --bam $fn_bam --bam-normal $fn_bam_normal  --only-sn-auprc --pathToBam $pathToBam --pathToBed $pathToBed "
+			command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $vcf --bam $fn_bam --bam-normal $fn_bam_normal  --only-sn-auprc --pathToBam $out_dir --pathToBed $pathToBed "
 			echo "$command"
 			submit "$command" --tag eval_SNV --log-dir $eval_dir/logs --queue $queue --fn-out $fn_out
 			cnt_jobs_TODO=$((cnt_jobs_TODO+1))
@@ -336,7 +383,7 @@ fi
 
 if $binomT; then
 	## Now the binomial test ones
-	for var_dir in $base_dir/alignments_vsn_k20/variants_default/; do
+	for var_dir in $out_dir/alignments_vsn_k20/variants_default/; do
 		perc=50
 		cont=20
 		true_tag=""
@@ -351,8 +398,9 @@ if $binomT; then
 		gatkHPCaller="$var_dir/TU.wCont$cont.final.RG.${perc}perc${true_tag}.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf"
 		deepSNV="$var_dir/TU.wCont${cont}.final.RG.${perc}perc${true_tag}_NO_final.RG.${perc}perc${true_tag}_alternative_two.sided.deepSNV.vcf"
  		mutect="$var_dir/TU.wCont$cont.final.RG.${perc}perc${true_tag}.muTect_SNVs_Raw.vcf"
+		sinvict="$var_dir/sinvict_TU.wCont${cont}.final.RG.${perc}perc_vs_NO_final.RG.${perc}perc_somatic.vcf"
 			
-		for tool in $sniper $jointSNV $sam_1_2 $varscan $gatk $deepSNV $mutect $gatkHPCaller; do
+		for tool in $sniper $jointSNV $sam_1_2 $varscan $gatk $deepSNV $mutect $gatkHPCaller $sinvict; do
 			vcf_name=`basename $tool`
 			vcf=$tool
 			cnt_jobs_total=$((cnt_jobs_total+1))
@@ -379,7 +427,7 @@ if $binomT; then
 				fi
 			fi
 	
-			command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --only-sn-auprc --binom-test --pathToBam $pathToBam --pathToBed $pathToBed "
+			command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --only-sn-auprc --binom-test --pathToBam $out_dir --pathToBed $pathToBed "
 			echo "$command"
 			submit "$command" --tag eval_SNV --log-dir $eval_dir/logs --fn-out $fn_out --queue $queue
 			cnt_jobs_TODO=$((cnt_jobs_TODO+1))
@@ -390,7 +438,7 @@ if $binomT; then
 
 	## from jointsnvmix, we take the one that was filtered before, because checking the bam file for > 19 million variants just takes too long (~1 month)
 	# /<pathTo>/filter_somatic_binom_test_JointSNVMix2 $mut_list ${outFile}
-	var_dir=$base_dir/alignments_vsn_k20/variants_default/
+	var_dir=$out_dir/alignments_vsn_k20/variants_default/
 	jointSNV=$var_dir/binomTest_160527/TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_cpp
 	perc=50
 	cont=20
@@ -424,18 +472,17 @@ if $binomT; then
 		fi
 	fi
 	
-	command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --only-sn-auprc --pathToBam $pathToBam --pathToBed $pathToBed"
+	command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $tool --bam $fn_bam --bam-normal $fn_bam_normal --only-sn-auprc --pathToBam $out_dir --pathToBed $pathToBed"
 	echo "$command"
 	submit "$command" --tag eval_SNV --log-dir $eval_dir/logs --fn-out $fn_out --queue $queue
 	cnt_jobs_TODO=$((cnt_jobs_TODO+1))
 	wait_for_jobs eval_SNV --max-num $max_num_jobs
-exit 0
 fi	
 
 
 if $repeatS; then
 	## Now the repeated subsampling ones
-	for var_dir in $base_dir/alignments_vsn_k20/bam/variants_repeatedSubsampling/; do
+	for var_dir in $out_dir/alignments_vsn_k20/bam/variants_repeatedSubsampling/; do
 		perc=50
 		cont=20
 		for vcf in `ls $var_dir/*.vcf | grep -v combined | grep -v paired | grep -v GERMLINE` `ls $var_dir/*.vcf.gz | grep -v combined | grep -v paired | grep -v GERMLINE`; do
@@ -467,7 +514,7 @@ if $repeatS; then
 				fi
 			fi
 	
-			command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $vcf --bam $fn_bam --bam-normal $fn_bam_normal  --only-sn-auprc --pathToBam $pathToBam --pathToBed $pathToBed "
+			command="$evaluate_vcf_tool_path/evaluate_vcf --out-dir $out_dir --vcf-dir $vcf_dir --eval-dir $eval_dir --max-cnt-normal $max_cnt_normal $vcf --bam $fn_bam --bam-normal $fn_bam_normal  --only-sn-auprc --pathToBam $out_dir --pathToBed $pathToBed "
 			echo "$command"
 			submit "$command" --tag eval_SNV --log-dir $eval_dir/logs --fn-out $fn_out --queue $queue
 			cnt_jobs_TODO=$((cnt_jobs_TODO+1))

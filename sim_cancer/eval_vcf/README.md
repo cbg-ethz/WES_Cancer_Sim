@@ -24,3 +24,32 @@ plot_coverage_profiles.sh: plots the coverage profiles of the 20% contamination,
 
 plot_auPRC_repeatedSubsampling.sh: plots the auPRC of all the repeated subsamplings in a boxplot; starts plot_auPRC_repeatedSubsampling.R
 
+
+
+## for revisions:
+
+# ./run_eval.sh to evaluate the sinvict runs
+
+
+## for new simulation:
+##  testing the new python script with compiles the VAFs for all variants:
+# python compile_vcf_with_ground_truth_VAFs.py ~/scratch/arhofman/exome_seq_pipeline_eval/final_vcfs_0.25_subclones/CNVs/intersectedVariants/chrLoss/inclGains/listPerSubclone/finalListsAndRegions/ ~/scratch/arhofman/exome_seq_pipeline_eval/simulation_wCNVs_n_Aneuploidy/abundance.txt ~/scratch/arhofman/exome_seq_pipeline_eval/test/
+
+source ../../paths.sh
+bedDir=~/scratch/arhofman/exome_seq_pipeline_eval/final_vcfs_0.25_subclones/CNVs/intersectedVariants/chrLoss/inclGains/listPerSubclone/finalListsAndRegions/
+for subclone_bed in $bedDir/*[01]_TU.bed $bedDir/*[01]_TU_gain.bed ; do
+	outVars=${subclone_bed%.bed}_all_variants_regions.bed
+	if [ ! -f $outVars ]; then
+		command="$intersectBed -f 1.0 -wa -a ~/scratch/arhofman/exome_seq_pipeline_eval/test/all_variants_TEMP.bed -b $subclone_bed > $outVars"
+		echo $command
+		eval $command
+	fi
+done
+
+ python compile_vcf_with_ground_truth_VAFs.py ~/scratch/arhofman/exome_seq_pipeline_eval/final_vcfs_0.25_subclones/CNVs/intersectedVariants/chrLoss/inclGains/listPerSubclone/finalListsAndRegions/ ~/scratch/arhofman/exome_seq_pipeline_eval/simulation_wCNVs_n_Aneuploidy/abundance.txt ~/scratch/arhofman/exome_seq_pipeline_eval/test/
+
+cp ~/scratch/arhofman/exome_seq_pipeline_eval/test/all_tumor_eval.vcf  /home/arhofman/scratch/arhofman/exome_seq_pipeline_eval/simulation_wCNVs_n_Aneuploidy/
+
+
+./run_eval.sh wCNVs
+

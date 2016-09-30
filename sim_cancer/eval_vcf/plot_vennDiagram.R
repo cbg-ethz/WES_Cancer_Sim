@@ -15,18 +15,22 @@ callers_selection="top"
 
 overlaps_file=c(paste(overlapDir,"/SNV_lists_fdr01_1percent/overlaps/overlap_summary_",callers_selection,"5callers.txt",sep=""),paste(overlapDir,"/SNV_lists_fdr05_5percent/overlaps/overlap_summary_",callers_selection,"5callers.txt",sep=""),paste(overlapDir,"/SNV_lists_fdr10_10percent/overlaps/overlap_summary_",callers_selection,"5callers.txt",sep=""))
 overlaps_file_name=c("1percent","5percent","10percent")
-tools=c("deepSNV", "JointSNVMix2", "SAMtools", "GATK UG", "GATK HP" , "MuTect", "SomaticSniper", "Varscan2")
+tools=c("deepSNV", "JointSNVMix2", "SAMtools", "GATK UG", "GATK HP" , "MuTect", "SiNVICT", "SomaticSniper", "Varscan2")
 
 if (callers_selection == "top"){
 	## c(brewer.pal(9,"Set1")[-6]) colors for deep, joint, SAMvar, gatkUG, gatkHP, muTect, somSniper, varscan2
-	## now in the order of the tools that I have: ('joint' 'deep' 'gatkUG' 'somSniper' 'gatkHP') # top 5 callers
-	cols=c(brewer.pal(9,"Set1")[-6])[c(2,1,4,7,5)]
-	tools_venn=tools[c(2,1,4,7,5)]
-} else if (callers_selection == "bottom") {
-	## now in the order of the tools that I have: 'somSniper' 'gatkHP' 'varscan2' 'SAMvar' 'muTect') # bottom 5 callers
-	cols=c(brewer.pal(9,"Set1")[-6])[c(7,5,8,3,6)]
-	tools_venn=tools[c(7,5,8,3,6)]	
-}
+	## now in the order of the tools that I have: ('joint' 'deep' 'gatkUG' 'somSniper' 'SiNVICT') # top 5 callers
+	#cols=c(brewer.pal(9,"Set1")[-6])[c(2,1,4,7,5)]
+	# colors for deep, gatkHP, gatkUG, joint, muTect, SAMvar, SiNVICT, somSniper, varscan2
+	colors=c(brewer.pal(9,"Set1")[c(-2,-6)], brewer.pal(9, "Blues")[c(4,8)])[c(1,4,3,9,5,2,8,6,7)][c(4,1,3,8,7)]
+	cols=colors
+	tools_venn=tools[c(2,1,4,8,7)]
+} 
+#else if (callers_selection == "bottom") {
+#	## now in the order of the tools that I have: 'somSniper' 'gatkHP' 'varscan2' 'SAMvar' 'muTect') # bottom 5 callers
+#	cols=c(brewer.pal(9,"Set1")[-6])[c(7,5,8,3,6)]
+#	tools_venn=tools[c(7,5,8,3,6)]	
+#}
 
 cnt=1
 for (curr_overlaps_file in overlaps_file){

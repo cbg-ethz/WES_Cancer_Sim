@@ -4,7 +4,7 @@
 currScriptDir=`dirname $0`
 source `find ${currScriptDir}/../../ -name paths.sh`
 
-path2PR="$base_dir/alignments_vsn_k20/variants_default/eval_10000_160527/"
+path2PR="$base_dir_wCNVs/alignments_vsn_k20/variants_default/eval_10000_160527/"
 
 declare -a tools=('_NO_final.RG.50perc_alternative_two.sided.deepSNV.vcf' '.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf' '.gatk_SNVs.raw.SOMATIC.vcf' '.jointSNVMix2_SNVs_Raw.vcf' '.muTect_SNVs_Raw.vcf' '.option__noE_samvar_1_2.SOMATIC.vcf.gz' 'sinvict' '.somaticSniper_SNVs_Raw_qual.noComma.vcf' '.bam__varscan2.txt.snp.Somatic_qual.vcf')
 declare -a titles=('deepSNV' 'GATK_HP' 'GATK_UG' 'JointSNVMix2' 'MuTect' 'SAMtools' 'SiNVICT' 'SomaticSniper' 'VarScan2')

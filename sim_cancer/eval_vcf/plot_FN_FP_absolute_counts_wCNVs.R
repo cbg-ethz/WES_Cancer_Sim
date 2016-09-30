@@ -9,9 +9,7 @@ library("RColorBrewer")
 library("corrplot")
 library("gplots")
 
-algmt_k20_dir=paste(base_dir,"alignments_vsn_k20/",sep="")
-
-align=c("alignments_vsn_k20","alignments_sn_k1") 
+align=c("alignments_vsn_k20") 
 num=13
 
 barplot_colors=c(brewer.pal(11,"RdYlGn")[1],
@@ -28,7 +26,7 @@ barplot_colors=c(brewer.pal(11,"RdYlGn")[1],
 
 for (j in 1:length(align))
 {
-	eval_dir=paste(base_dir, align[j], "/variants_default/eval_10000_160527/", sep="")
+	eval_dir=eval_dir_k20_wCNVs
 
 	tools=c("perc_NO_final.RG.50perc_alternative_two.sided.deepSNV.vcf", "perc.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf", "perc.gatk_SNVs.raw.SOMATIC.vcf", "perc.jointSNVMix2_SNVs_Raw.vcf", "perc.muTect_SNVs_Raw.vcf", "perc.option__noE_samvar_1_2.SOMATIC.vcf.gz", "sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf", "perc.somaticSniper_SNVs_Raw_qual.noComma.vcf", "perc.bam__varscan2.txt.snp.Somatic_qual.vcf")
 
@@ -42,18 +40,18 @@ for (j in 1:length(align))
 		fn_dat_fp=paste(eval_dir, "/TU.wCont20.final.RG.50", tools[i], "_indel0.eval_FP_absolute_counts", sep="") 
 		fn_dat_fn=paste(eval_dir, "/TU.wCont20.final.RG.50", tools[i], "_indel0.eval_FN_absolute_counts", sep="")
 		if (names[i] == "SiNVICT"){
-                        fn_dat_fp=paste(eval_dir, "/", tools[i], "_indel0.eval_FP_absolute_counts", sep="")
-                        fn_dat_fn=paste(eval_dir, "/", tools[i], "_indel0.eval_FN_absolute_counts", sep="")
-                }
+			fn_dat_fp=paste(eval_dir, "/", tools[i], "_indel0.eval_FP_absolute_counts", sep="")
+			fn_dat_fn=paste(eval_dir, "/", tools[i], "_indel0.eval_FN_absolute_counts", sep="")
+		}
 		dat_fp = read.table(fn_dat_fp)
 		dat_fn = read.table(fn_dat_fn)
 	
 		fn_dat_fp_total=paste(eval_dir, "/TU.wCont20.final.RG.50", tools[i], "_indel0.eval_FP_pie_fix", sep="") # for the total number of FP's
 		fn_dat_fn_total=paste(eval_dir, "/TU.wCont20.final.RG.50", tools[i], "_indel0.eval_FN_pie_fix", sep="") # for the total number of FN's
-		 if (names[i] == "SiNVICT"){
-                        fn_dat_fp_total=paste(eval_dir, "/", tools[i], "_indel0.eval_FP_pie_fix", sep="") # for the total number of FP's
-                        fn_dat_fn_total=paste(eval_dir, "/", tools[i], "_indel0.eval_FN_pie_fix", sep="") # for the total number of FN's
-                }
+		if (names[i] == "SiNVICT"){
+			fn_dat_fp_total=paste(eval_dir, "/", tools[i], "_indel0.eval_FP_pie_fix", sep="") # for the total number of FP's
+			fn_dat_fn_total=paste(eval_dir, "/", tools[i], "_indel0.eval_FN_pie_fix", sep="") # for the total number of FN's
+		}
 		dat_fp_total=read.table(fn_dat_fp_total)
 		dat_fn_total=read.table(fn_dat_fn_total)
 

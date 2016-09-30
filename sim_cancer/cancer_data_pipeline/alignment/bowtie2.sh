@@ -2,6 +2,10 @@
 function run_botie2()
 {
 	echo run_bowtie2
+	echo "gitDir = $gitDir"
+	source `find ${gitDir} -name paths.sh` 
+	echo "bowtie = $bowtie"
+
 
 	# parse input
 	################################################################################	
@@ -84,7 +88,7 @@ function run_botie2()
 	# compute index if needed
 	################################################################################	
 	index_base=${ref}_bowtie_idx/
-	if [ ! -d $index_base ]; then 
+	if [[ ! -d $index_base || ! "$(ls -A  $index_base)" ]]; then  # if folder does not exist or is empty
 		mkdir -p $index_base
 		index_prefix=idx
 		echo $bowtie_index_tool $ref $index_base/$index_prefix
@@ -97,8 +101,9 @@ function run_botie2()
 	index_base=$index_base/$index_prefix
 
 	# compute number of free CPUs
-	nr_threads=`compute_capacity`
-
+	#nr_threads=`compute_capacity`
+	nr_threads=1
+	
 	# set options
 	opts="$opts -q" # input is fastq file
 	opts="$opts --phred33"	#scaling of phred score

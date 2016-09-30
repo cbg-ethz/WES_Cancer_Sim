@@ -241,6 +241,22 @@ do
 			echo $command
 		fi
 	done
+
+	# sinvict
+	################################################################################
+	declare -a sinvict_opts=('--qscore-cutoff 20' '--qscore-cutoff 40' '--qscore-cutoff 60' '--qscore-cutoff 80' )
+	for opt_cnt in `seq 1 ${#sinvict_opts[@]}`
+	do
+		curr_opt=${sinvict_opts[opt_cnt-1]}
+		fn_out=${log_dir}sinvict_job_`basename ${TU_bam%.bam}`_option_`echo $curr_opt | sed 's/-//g' | sed 's/ //g'`.o
+		if [ -f $fn_out ]; then
+			echo "$fn_out already exists."
+		else
+			command="source `find $SNV_DIR -name sinvict_variants.sh`; source `find $SNV_DIR -name paths.sh` ; sinvict_variants $TU_bam $fn_genome $variantDir $NO_bam $bed_file $curr_opt "
+			submit "$command" --fn-out $fn_out --tag sinvict$perc --work-dir $SNV_DIR --queue $queue
+		fi
+	done
+
 done
 exit 0
 

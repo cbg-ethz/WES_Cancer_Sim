@@ -101,6 +101,9 @@ if [ ! -f $fn_blat ]; then
 	# stop the blat server
 	$gfServer stop localhost $blat_port
 fi
+echo "fasta file of probe sequence done"
+>&2 echo "fasta file of probe sequence done"
+
 # Run Wessim2 in probe hybridization mode.
 # This will generate *result_1.fastq.gz* and *result_2.fastq.gz* (paired-end mode / gzip compressed).
 if [ ! "$skip_after_blat" == "yes" ]; then 

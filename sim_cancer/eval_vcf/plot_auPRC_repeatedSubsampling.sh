@@ -3,7 +3,7 @@
 currScriptDir=`dirname $0`
 source `find ${currScriptDir}/../../ -name paths.sh`
 dir_=`pwd`
-namesWoDeep="gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf gatk_SNVs.raw.SOMATIC.vcf  jointSNVMix2_SNVs_Raw.vcf muTect_SNVs_Raw.vcf option__noE_samvar_1_2.SOMATIC.vcf.gz somaticSniper_SNVs_Raw_qual.noComma.vcf bam__varscan2.txt.snp.Somatic_qual.vcf"
+namesWoDeep="gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf gatk_SNVs.raw.SOMATIC.vcf  jointSNVMix2_SNVs_Raw.vcf muTect_SNVs_Raw.vcf option__noE_samvar_1_2.SOMATIC.vcf.gz sinvict_TU.wCont.final.RG.perc_vs_NO_final.RG.perc_somatic.vcf  somaticSniper_SNVs_Raw_qual.noComma.vcf bam__varscan2.txt.snp.Somatic_qual.vcf"
 cov=50
 
 for eval_dir in $base_dir/alignments_vsn_k20/bam/variants_repeatedSubsampling/eval_10000_160527/; do
@@ -20,9 +20,15 @@ for eval_dir in $base_dir/alignments_vsn_k20/bam/variants_repeatedSubsampling/ev
 		for tool in $namesWoDeep; do
 			fn_prc_all=${tool}.all_auPRC_${fdr}
 			if [ ! -f $fn_prc_all ]; then
-				for fn_prc in TU.wCont20.final.RG.50perc*${tool}*eval_auPRC_${fdr}; do
-					echo `cat $fn_prc` >> $fn_prc_all
-				done
+				if [[ $tool == *sinvict* ]]; then
+					for fn_prc in sinvict_TU.wCont20.final.RG.50perc.*_vs_NO_final.RG.50perc.*_somatic.vcf_indel0.eval_auPRC_${fdr}; do
+						echo `cat $fn_prc` >> $fn_prc_all
+					done
+				else
+					for fn_prc in TU.wCont20.final.RG.50perc*${tool}*eval_auPRC_${fdr}; do
+						echo `cat $fn_prc` >> $fn_prc_all
+					done
+				fi
 			fi
 		done
 	done
