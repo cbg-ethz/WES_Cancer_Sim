@@ -15,7 +15,7 @@ run_wessim_all.sh: for each of the cancer clone genomes, it generates reads and 
 # Now, the variant callers can be started. see ../var_callers/
 
 ###
-## these are additional scripts which can be run:
+## These are additional scripts which can be run:
 
 check_coverage.sh: for coverage statistics and qualimap
 
@@ -25,7 +25,7 @@ repeated_subsampling.sh: to assert the variability of the performance, repeated 
 
 ## Analysis with CNVs and aneuploidies
 
-To add the call the CNVs, and add CNVs and aneuploidies to the simulation:
+To call the CNVs, and add CNVs and aneuploidies to the simulation:
 
 ./analysis_wCNVs.sh
 
