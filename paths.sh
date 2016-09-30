@@ -10,6 +10,7 @@ SAMDIR=<pathTo>/samtools-0.1.19
 SNV_DIR=$gitDir
 base_dir=<pathTo>/sim_cancer_exome/data/subsample/final_vcfs_0.25/tree_blat_i70_s60
 base_dir_wCNVs=<pathTo>/exome_seq_pipeline_eval/simulation_wCNVs_n_Aneuploidy/
+pipeline_eval=<pathTo>/exome_seq_pipeline_eval/
 vcf_sim_dir=<pathTo>/sim_cancer_exome/data/subsample/final_vcfs_0.25
 vcf_sim_dir_wCNVs=<pathTo>/exome_seq_pipeline_eval/final_vcfs_0.25_subclones/CNVs/intersectedVariants/chrLoss/inclGains/listPerSubclone/finalListsAndRegions/
 fasta_sim_dir=<pathTo>/sim_cancer_exome/data/subsample/

@@ -26,30 +26,19 @@ plot_auPRC_repeatedSubsampling.sh: plots the auPRC of all the repeated subsampli
 
 
 
-## for revisions:
+# For the analysis with CNVs and aneuploidies:
 
-# ./run_eval.sh to evaluate the sinvict runs
+./start_compile_vcf_with_ground_truth_VAFs_wCNVs.sh: to get the list with all ground truth variants and their VAF; uses the script compile_vcf_with_ground_truth_VAFs.py 
 
-
-## for new simulation:
-##  testing the new python script with compiles the VAFs for all variants:
-# python compile_vcf_with_ground_truth_VAFs.py ~/scratch/arhofman/exome_seq_pipeline_eval/final_vcfs_0.25_subclones/CNVs/intersectedVariants/chrLoss/inclGains/listPerSubclone/finalListsAndRegions/ ~/scratch/arhofman/exome_seq_pipeline_eval/simulation_wCNVs_n_Aneuploidy/abundance.txt ~/scratch/arhofman/exome_seq_pipeline_eval/test/
-
-source ../../paths.sh
-bedDir=~/scratch/arhofman/exome_seq_pipeline_eval/final_vcfs_0.25_subclones/CNVs/intersectedVariants/chrLoss/inclGains/listPerSubclone/finalListsAndRegions/
-for subclone_bed in $bedDir/*[01]_TU.bed $bedDir/*[01]_TU_gain.bed ; do
-	outVars=${subclone_bed%.bed}_all_variants_regions.bed
-	if [ ! -f $outVars ]; then
-		command="$intersectBed -f 1.0 -wa -a ~/scratch/arhofman/exome_seq_pipeline_eval/test/all_variants_TEMP.bed -b $subclone_bed > $outVars"
-		echo $command
-		eval $command
-	fi
-done
-
- python compile_vcf_with_ground_truth_VAFs.py ~/scratch/arhofman/exome_seq_pipeline_eval/final_vcfs_0.25_subclones/CNVs/intersectedVariants/chrLoss/inclGains/listPerSubclone/finalListsAndRegions/ ~/scratch/arhofman/exome_seq_pipeline_eval/simulation_wCNVs_n_Aneuploidy/abundance.txt ~/scratch/arhofman/exome_seq_pipeline_eval/test/
-
-cp ~/scratch/arhofman/exome_seq_pipeline_eval/test/all_tumor_eval.vcf  /home/arhofman/scratch/arhofman/exome_seq_pipeline_eval/simulation_wCNVs_n_Aneuploidy/
-
-
+# for evaluating the runs with CNVs:
 ./run_eval.sh wCNVs
+
+# For plotting the results:
+plot_SN_curves_wCNVs.R: plots the sensitivity as a function of variant allele frequency for a fixed precision
+
+plot_PRC_wCNVs_nextTo_orig.sh: plots the precision recall curves for all tools together with the ones from the other analysis;  uses plot_PRC_altogether_wCNVs_nextTo_orig.R
+
+plot_PRC_wCNVs.sh: plots the precision recall curves for all tools; uses plot_PRC_altogether.R; plot_PRC.R
+
+plot_FN_FP_absolute_counts_wCNVs.R: plots the error profiles of false negative and false positive error sources, also plots the correlation of error profiles
 
