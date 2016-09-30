@@ -7,6 +7,10 @@ source `find ${currScriptDir}/../../ -name paths.sh`
 echo "${currScriptDir}/../simulate_WES_cancerSample/repeated_subsampling.sh $base_dir/alignments_vsn_k20/bam/"
 echo "${currScriptDir}/run_variant_callers.sh $base_dir/alignments_vsn_k20/bam/repeatedSubsampling/ $base_dir/alignments_vsn_k20/bam/  perc.[0-9]\*.bam"
 
+echo "${currScriptDir}/run_variant_callers.sh $base_dir_wCNVs/alignments_vsn_k20/bam/  $base_dir_wCNVs/alignments_vsn_k20"
+echo "${currScriptDir}/run_variant_callers.sh $base_dir_wCNVs/alignments_vsn_k20/bam/  $base_dir_wCNVs/alignments_vsn_k20 perc.true.bam"
+
+
 for out_folder in `ls -lh $base_dir/alignments*/bam/*.bam | awk '{print $9}'  | sed 's!/bam/! !' | awk '{print $1}' | uniq` 
 do
 	echo -e "\n"
