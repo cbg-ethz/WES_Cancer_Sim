@@ -1,7 +1,3 @@
-#!/usr/local/beerenwinkel/Rbase/R-3.1.2/bin/Rscript
-.libPaths(c("/usr/local/beerenwinkel/R/x86_64-redhat-linux-gnu-library/3.1.2", .libPaths()))
-.libPaths()
-
 
 # normalize the scores to be within 0-250
 normalize_scores <- function(raw_scores){

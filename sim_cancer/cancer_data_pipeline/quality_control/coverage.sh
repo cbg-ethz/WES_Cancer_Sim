@@ -77,8 +77,8 @@ function coverage()
 				zcat $PerBaseCoverage | awk '{print $NF}' > $PerBaseCoverageR
 				rm $TempPerBaseCoverage
 			
-				`find $gitDir -name coverageR_quality_stats.R` $PerBaseCoverageR 
-				`find $gitDir -name coverageR_quality_stats.R` $PerBaseCoverageR >> $coverage_stats
+				$RscriptPath `find $gitDir -name coverageR_quality_stats.R` $PerBaseCoverageR 
+				$RscriptPath `find $gitDir -name coverageR_quality_stats.R` $PerBaseCoverageR >> $coverage_stats
 			fi
 	
 			if [ -f $TempNOIntersect ]; then

@@ -1,5 +1,5 @@
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 source `find ${gitDir} -name paths.sh`
 
 if [ $# -lt 3 ]; then

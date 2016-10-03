@@ -12,7 +12,7 @@ To run the analysis, refer to the 'README' in the respective subfolder in the fo
 
 	4. ./eval_vcf/
 
-To do before running: add the paths to the ../paths.sh and ../paths.R file, and compile all programs
+To do before running: add the paths to the paths.sh and paths.R file, and compile all programs
 
 # cancer_data_pipeline:
 - contains the scripts for alignment, variant calling, checking the coverage, and processing of the fastq/bam/variant files

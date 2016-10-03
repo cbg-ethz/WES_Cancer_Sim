@@ -1,7 +1,7 @@
 #!/bin/bash
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 source `find ${gitDir} -name paths.sh`
 
 # generate the overlaps between all subclones to obtain the intermediate clones vcf:

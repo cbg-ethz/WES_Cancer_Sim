@@ -1,11 +1,8 @@
-#!/usr/local/beerenwinkel/Rbase/R-3.1.2/bin/Rscript
-.libPaths(c("/usr/local/beerenwinkel/R/x86_64-redhat-linux-gnu-library/3.1.2", .libPaths()))
-.libPaths()
 
 library("RColorBrewer")
 args <- commandArgs(trailingOnly = F)
 script.dir <- dirname(sub("--file=","",args[grep("--file",args)]))
-source(paste(script.dir,"/../../paths.R",sep=""))
+source(paste(script.dir,"/../paths.R",sep=""))
 
 pdfToPlot <- paste(eval_dir_k20,"/Summary_auPRC_FDR10_barplot.pdf",sep="")
 

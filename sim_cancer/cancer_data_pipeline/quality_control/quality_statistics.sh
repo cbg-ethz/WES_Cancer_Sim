@@ -98,7 +98,7 @@ function quality_statistics()
 			queue="-q regular.q"
                         #queue="-q regular.q@bs-dsvr02,regular.q@bs-dsvr04,regular.q@bs-dsvr05,regular.q@bs-dsvr08"
                         #queue="-q mpi04-ht.q" # bewi
-                        echo "echo cd $dir_ > $fn_out; cd $dir_; echo $fn_bam >> $fn_out; hostname >> $fn_out; source `find ../ -name quality_statistics.sh`; source `find ../ -name paths.sh` ; source `find ../ -name utils.sh` ; quality_statistics $fn_bam $ext $stats_dir $gtf_file $out_dir $chromInfo $tsv_dir " | qsub $queue -o $fn_out -e $fn_err -N quality$cnt -cwd
+                        echo "echo cd $dir_ > $fn_out; cd $dir_; echo $fn_bam >> $fn_out; hostname >> $fn_out; source `find ../ -name quality_statistics.sh`; source `find ../../ -name paths.sh` ; source `find ../ -name utils.sh` ; quality_statistics $fn_bam $ext $stats_dir $gtf_file $out_dir $chromInfo $tsv_dir " | qsub $queue -o $fn_out -e $fn_err -N quality$cnt -cwd
 
 
                 done

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 for SAMVCF in `ls $base_dir/alignments_vsn_k20/variants_tuned/*sam*.gz | grep -v combined | grep -v NO | grep -v GERMLINE | grep -v eval | grep -v SOMATIC | grep -v Germline` `find $base_dir/alignments_vsn_k20/variants_default/ -name TU*samvar*.vcf.gz | grep -v eval | grep -v GERMLINE | grep -v SOMATIC | grep -v combined | grep -v SOMATIC_paired` `find $base_dir/alignments_sn_k1/variants_default/ -name TU*samvar*.vcf.gz | grep -v eval | grep -v GERMLINE | grep -v SOMATIC | grep -v combined | grep -v SOMATIC_paired`  `find $base_dir/alignments_vsn_k20/bam/variants_repeatedSubsampling/ -name TU*samvar*.vcf.gz | grep -v eval | grep -v GERMLINE | grep -v SOMATIC |  grep -v combined | grep -v SOMATIC_paired`; do
 	NoVCF=${SAMVCF%_samvar_1_2.vcf.gz}_noE_samvar_1_2.vcf.NOsample.gz

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 source `find ${gitDir} -name paths.sh`
 create_cancer_vcfs=`find ${gitDir} -name create_cancer_vcfs.py`
 create_ref_from_vcf=`find ${gitDir} -name create_ref_from_vcf`

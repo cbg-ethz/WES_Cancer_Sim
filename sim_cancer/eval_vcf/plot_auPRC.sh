@@ -1,7 +1,7 @@
 #!/bin/bash
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 names="perc_NO_final.RG.50perc_alternative_two.sided.deepSNV.vcf perc.gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf perc.gatk_SNVs.raw.SOMATIC.vcf  perc.jointSNVMix2_SNVs_Raw.vcf perc.muTect_SNVs_Raw.vcf perc.option__noE_samvar_1_2.SOMATIC.vcf.gz perc.sinvict_TU.wCont.final.RG.perc_vs_NO_final.RG.perc_somatic.vcf  perc.somaticSniper_SNVs_Raw_qual.noComma.vcf perc.bam__varscan2.txt.snp.Somatic_qual.vcf"
 
@@ -109,11 +109,11 @@ if true; then
 	done
 	echo $all_auPRC_all_tools
 	
-	command="${dir_}/sim_cancer/eval_vcf/plot_auPRC.R ${eval_dir}/all_auPRC_5_10_cov.pdf $all_auPRC_all_tools FALSE"
+	command="$RscriptPath ${dir_}/sim_cancer/eval_vcf/plot_auPRC.R ${eval_dir}/all_auPRC_5_10_cov.pdf $all_auPRC_all_tools FALSE"
 	echo $command
 	eval $command
 	
-	command="${dir_}/sim_cancer/eval_vcf/plot_auPRC.R ${eval_dir}/all_auPRC_5_10_cont.pdf $all_auPRC_all_tools TRUE"
+	command="$RscriptPath ${dir_}/sim_cancer/eval_vcf/plot_auPRC.R ${eval_dir}/all_auPRC_5_10_cont.pdf $all_auPRC_all_tools TRUE"
 	echo $command
 	eval $command
 

@@ -1,5 +1,3 @@
-#!/usr/local/beerenwinkel/Rbase/R-3.0.1/bin/Rscript
-.libPaths(new = c("/home/arhofman/R/R_3.0.1", .libPaths()))
 
 args <- commandArgs(TRUE)
 coverageFile <- args[1]

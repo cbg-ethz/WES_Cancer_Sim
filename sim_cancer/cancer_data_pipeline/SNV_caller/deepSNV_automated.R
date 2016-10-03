@@ -1,8 +1,3 @@
-#!/usr/local/beerenwinkel/R-3.3.0/bin/Rscript
-###### used to be /usr/local/beerenwinkel/Rbase/R-3.1.2/bin/Rscript for the old deepSNV version (1.12.)
-###### .libPaths(c("/usr/local/beerenwinkel/R/x86_64-redhat-linux-gnu-library/3.1.2", .libPaths()))
-.libPaths()
-
 
 # read in command line arguments
 args <- commandArgs(TRUE)

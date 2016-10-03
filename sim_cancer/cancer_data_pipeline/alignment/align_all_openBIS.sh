@@ -5,8 +5,8 @@ if [ -z $1 ]; then
 fi
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../../ -name paths.sh`
-source `find ../../../ -name paths.sh`
+source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ../../ -name paths.sh`
 source `find ${dir_} -name paths.sh`
 source `find ${dir_} -name utils.sh`
 source `find ${dir_} -name genome.sh`

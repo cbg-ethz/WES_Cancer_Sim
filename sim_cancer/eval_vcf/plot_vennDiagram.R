@@ -1,10 +1,7 @@
-#!/usr/local/beerenwinkel/Rbase/R-3.1.2/bin/Rscript
-.libPaths(c("/usr/local/beerenwinkel/R/x86_64-redhat-linux-gnu-library/3.1.2", .libPaths()))
-.libPaths()
 
 args <- commandArgs(trailingOnly = F)
 script.dir <- dirname(sub("--file=","",args[grep("--file",args)]))
-source(paste(script.dir,"/../../paths.R",sep=""))
+source(paste(script.dir,"/../paths.R",sep=""))
 
 library("VennDiagram")
 library("RColorBrewer")

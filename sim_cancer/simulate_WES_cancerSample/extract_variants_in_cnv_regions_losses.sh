@@ -1,7 +1,7 @@
 #!/bin/bash
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 source `find ${gitDir} -name paths.sh`
 tools_dir=${gitDir}
 source `find ${tools_dir} -name genome.sh`

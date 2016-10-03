@@ -5,7 +5,7 @@
 percentFDR=1
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 SNVlist_percentFolder=$base_dir/alignments_vsn_k20/variants_default/`echo SNV_lists_fdr0${percentFDR}_${percentFDR}percent | sed 's/fdr010_/fdr10_/'`
 outDir=${SNVlist_percentFolder}/overlaps/allOverlapsVennTop5ToolsExtractLists
@@ -37,7 +37,7 @@ for file in gatkUG deep joint somSniper sinvict; do
 done
 
 if [ ! -f $outDir/intersectAll.txt ]; then
-	$currScriptDir/getSets.R $inputs
+	$RscriptPath $currScriptDir/getSets.R $inputs
 fi
 
 for file in $outDir/*private*.txt; do

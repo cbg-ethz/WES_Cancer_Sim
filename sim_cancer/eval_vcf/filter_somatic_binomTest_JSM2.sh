@@ -2,7 +2,7 @@
 
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 ### filter only somatic mutations #locally
 varDir=$base_dir/alignments_vsn_k20/variants_default/

@@ -86,7 +86,7 @@ function deepSNV_automated_variants()
 	
 	deepSNV_script=`find $SNV_DIR -name deepSNV_automated.R`
 	 
-	command="$deepSNV_script $real_bed_file $tumor_bam $normal_bam $out_dir $opts"
+	command="$RscriptPath $deepSNV_script $real_bed_file $tumor_bam $normal_bam $out_dir $opts"
 	echo $command
 	eval $command
 	

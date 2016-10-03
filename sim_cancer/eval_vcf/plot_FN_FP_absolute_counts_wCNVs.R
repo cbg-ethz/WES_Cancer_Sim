@@ -1,9 +1,7 @@
-#!/usr/local/beerenwinkel/R-3.3.0/bin/Rscript
-.libPaths()
 
 args <- commandArgs(trailingOnly = F)
 script.dir <- dirname(sub("--file=","",args[grep("--file",args)]))
-source(paste(script.dir,"/../../paths.R",sep=""))
+source(paste(script.dir,"/../paths.R",sep=""))
 
 library("RColorBrewer")
 library("corrplot")

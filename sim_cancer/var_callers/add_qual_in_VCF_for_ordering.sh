@@ -1,7 +1,7 @@
 #!/bin/bash
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 for somaticSniperVCF in `find $base_dir/alignments_*/variants_default/ -name *somaticSniper_SNVs_Raw.vcf` `find $base_dir/alignments_vsn_k20/bam/variants_repeatedSubsampling -name *somaticSniper_SNVs_Raw.vcf`
 do

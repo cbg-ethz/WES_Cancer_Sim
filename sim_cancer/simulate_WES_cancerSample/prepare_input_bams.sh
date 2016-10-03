@@ -1,7 +1,7 @@
 #!/bin/bash
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
-source `find ${currScriptDir}/../../ -name run_smmr.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
+source `find ${currScriptDir}/../ -name run_smmr.sh`
 
 echo $gitDir
 bamDir=$1

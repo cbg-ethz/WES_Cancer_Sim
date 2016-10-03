@@ -1,7 +1,7 @@
 #!/bin/bash
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 dir_=`pwd`
 namesWoDeep="gatkHPCaller_SNVs.raw.SOMATIC.rewritten.vcf gatk_SNVs.raw.SOMATIC.vcf  jointSNVMix2_SNVs_Raw.vcf muTect_SNVs_Raw.vcf option__noE_samvar_1_2.SOMATIC.vcf.gz sinvict_TU.wCont.final.RG.perc_vs_NO_final.RG.perc_somatic.vcf  somaticSniper_SNVs_Raw_qual.noComma.vcf bam__varscan2.txt.snp.Somatic_qual.vcf"
 cov=50
@@ -42,7 +42,7 @@ for fdr in 5 10; do
 		all_auPRC_all_tools="$all_auPRC_all_tools ${eval_dir}/${tool}.all_auPRC_${fdr}"
 	done
 	
-	command="./plot_auPRC_repeatedSubsampling.R ${eval_dir}/all_auPRC_5_10_repeatedSubsampling_FDR${fdr}.pdf $fdr $all_auPRC_all_tools "
+	command="$RscriptPath ./plot_auPRC_repeatedSubsampling.R ${eval_dir}/all_auPRC_5_10_repeatedSubsampling_FDR${fdr}.pdf $fdr $all_auPRC_all_tools "
 	echo $command
 	eval $command
 done

@@ -2,7 +2,7 @@
 
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 path2PR="$base_dir/alignments_vsn_k20/variants_default/eval_10000_160527/"
 
@@ -21,12 +21,12 @@ for fileIDX in `seq 1 ${#tools[@]}`; do
 		myPRcurveFile=$path2PR/sinvict_TU.wCont20.final.RG.50perc_vs_NO_final.RG.50perc_somatic.vcf_indel0.PRcurve
 	fi
 	allFiles="$allFiles $myPRcurveFile "
-	command="./plot_PRC.R $path2PR $myPRcurveFile ${titles[fileIDX-1]}"
+	command="$RscriptPath ./plot_PRC.R $path2PR $myPRcurveFile ${titles[fileIDX-1]}"
 	echo $command
 	eval $command
 done
 
-./plot_PRC_altogether.R $allFiles
+$RscriptPath ./plot_PRC_altogether.R $allFiles
 
 
 

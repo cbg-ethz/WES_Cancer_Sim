@@ -1,7 +1,7 @@
 #/bin/bash -l
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 echo $currScriptDir 
 echo $SNV_DIR

@@ -2,7 +2,7 @@
 
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 
 simDir=$base_dir/alignments_vsn_k20/
@@ -19,7 +19,7 @@ for fileIDX in `seq 1 ${#coverageProfile[@]}`; do
 		cat $myCovProfile | awk 'NR>=74' | awk 'NR <=51' | awk '{print $11"\t"$4}' | sed 's/%//g' | sed 's/X//g' > $Rsummary
 	fi
 	sampleName=`basename $myCovProfile`
-	$gitDir/sim_cancer/eval_vcf/plot_coverage_profiles.R $Rsummary $meanCov $sampleName
+	$RscriptPath $gitDir/sim_cancer/eval_vcf/plot_coverage_profiles.R $Rsummary $meanCov $sampleName
 done
 
 
@@ -31,6 +31,6 @@ if [ ! -f $Rsummary ]; then
 	cat $covProfileTotal | awk 'NR>=7' | awk '{print $1"\t"$2}' > $Rsummary
 fi
 sampleName=`basename $covProfileTotal`
-$gitDir/sim_cancer/eval_vcf/plot_coverage_profiles.R $Rsummary $meanCov $sampleName $medianCov
+$RscriptPath $gitDir/sim_cancer/eval_vcf/plot_coverage_profiles.R $Rsummary $meanCov $sampleName $medianCov
 
 

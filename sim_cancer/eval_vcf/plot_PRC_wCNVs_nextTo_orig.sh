@@ -2,7 +2,7 @@
 
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 path2PR="$base_dir_wCNVs/alignments_vsn_k20/variants_default/eval_10000_160527/"
 path2PRorig="$base_dir/alignments_vsn_k20/variants_default/eval_10000_160527/"
@@ -24,8 +24,8 @@ for fileIDX in `seq 1 ${#tools[@]}`; do
 	fi
 	allFiles="$allFiles $myPRcurveFile $myPRcurveFileOrig "
 done
-echo "./plot_PRC_altogether_wCNVs_nextTo_orig.R $allFiles"
-./plot_PRC_altogether_wCNVs_nextTo_orig.R $allFiles
+echo "$RscriptPath ./plot_PRC_altogether_wCNVs_nextTo_orig.R $allFiles"
+$RscriptPath ./plot_PRC_altogether_wCNVs_nextTo_orig.R $allFiles
 
 
 

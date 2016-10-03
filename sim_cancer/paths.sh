@@ -2,7 +2,6 @@
 
 # Please note: The user has to have Seqan installed, to run the analysis
 # In your shell: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${gitDir}/sim_cancer/eval_vcf/imported_scripts/hdf5/hdf5-1.8.11/hdf5/lib/
-
 # directories
 gitDir=`pwd`
 dir_=$gitDir
@@ -21,6 +20,7 @@ localToolsDir=<pathTo>
 bamDir=<pathTo>/exome_seq_pipeline_eval/generate_vcfs/
 
 # tools
+RscriptPath=$localToolsDir/R-3.3.0/bin/Rscript
 bowtie_index_tool=$localToolsDir/bowtie2-2.1.0/bowtie2-build
 bowtie=$localToolsDir/bowtie2-2.1.0/bowtie2
 picard_tools="java -Xmx2g -jar $localToolsDir/picard-tools-1.92/"

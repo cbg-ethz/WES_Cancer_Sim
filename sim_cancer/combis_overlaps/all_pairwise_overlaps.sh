@@ -1,7 +1,7 @@
 #!/bin/bash
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 varDir=$base_dir/alignments_vsn_k20/variants_default/
 evalDir=$varDir/eval_10000_160527
@@ -85,6 +85,7 @@ for numIdx in 01 02 03 04 05 06 07 08 12 13 14 15 16 17 18 23 24 25 26 27 28 34 
 		echo $command
 		eval $command
 	fi
+
 
 	if [[ $file2 == *joint* ]]; then
 		originalVCF=../TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf

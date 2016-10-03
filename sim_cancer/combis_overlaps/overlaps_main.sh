@@ -1,7 +1,7 @@
 #!/bin/bash
 
 currScriptDir=`dirname $0`
-source `find ${currScriptDir}/../../ -name paths.sh`
+source `find ${currScriptDir}/../ -name paths.sh`
 
 varDir=$base_dir/alignments_vsn_k20/variants_default/
 evalDir=$varDir/eval_10000_160527
