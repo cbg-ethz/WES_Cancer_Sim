@@ -9,6 +9,7 @@ tools_PRC=list()
 for(i in 1:18){
 	tools_PRC[[i]] <- args[i]
 }
+
 print(tools_PRC)
 pdfToPlot <- paste(dirname(tools_PRC[[1]]),"/Precision_Recall_Curves_all_wCNVs_and_orig.pdf",sep="")
 

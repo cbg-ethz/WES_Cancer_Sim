@@ -24,7 +24,6 @@ for fileIDX in `seq 1 ${#tools[@]}`; do
 	fi
 	allFiles="$allFiles $myPRcurveFile $myPRcurveFileOrig "
 done
-
 echo "./plot_PRC_altogether_wCNVs_nextTo_orig.R $allFiles"
 ./plot_PRC_altogether_wCNVs_nextTo_orig.R $allFiles
 
