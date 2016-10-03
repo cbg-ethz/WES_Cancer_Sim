@@ -27,9 +27,9 @@ if(!file.exists(pdfToPlot)){
 		recall=as.vector(as.numeric(PRvalues[,2]))
 		numSNVs=length(recall)
 		if(basename(tools_PRC[[i]]) == "TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_indel0.PRcurve"){
-			plot_IDX=seq(1,numSNVs,3000)
+			plot_IDX=seq(1,numSNVs,5000)
 		} else {
-			plot_IDX=seq(1,numSNVs,700)
+			plot_IDX=seq(1,numSNVs,2000)
 		}
 		#plot(recall[plot_IDX], precision[plot_IDX], pch=20,main=title, xlab="Recall", ylab="Precision",ylim=c(0,1),xlim=c(0,1),cex.axis=3,cex.lab=3,cex.main=3)
 		plot(recall[plot_IDX], precision[plot_IDX], pch=20,main=myTitles[cnt], xlab="Recall", ylab="Precision",ylim=c(0,1),xlim=c(0,1),cex.axis=5,cex.lab=5,cex.main=5, col="red")
@@ -39,9 +39,9 @@ if(!file.exists(pdfToPlot)){
                 recall=as.vector(as.numeric(PRvalues[,2]))
 		numSNVs=length(recall)
 		if(basename(tools_PRC[[i]]) == "TU.wCont20.final.RG.50perc.jointSNVMix2_SNVs_Raw.vcf_indel0.PRcurve"){
-                        plot_IDX=seq(1,numSNVs,3000)
+                        plot_IDX=seq(1,numSNVs,5000)
                 } else {
-                        plot_IDX=seq(1,numSNVs,700)
+                        plot_IDX=seq(1,numSNVs,2000)
                 }
 		points(recall[plot_IDX], precision[plot_IDX], col="black", pch=20)
 		cnt=cnt+1
