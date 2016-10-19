@@ -33,7 +33,7 @@ for(i in 2:length(args)){
 	currTool=args[i]
 	#cat(paste("Found " ,currTool, " as input.\n",sep=""))
 	numTools=numTools+1
-	if(grepl("muTect",basename(currTool)) || grepl("mutect",basename(currTool)) || grepl("MuTect",basename(currTool)) || grepl("mutect",basename(currTool)) ){
+	if(grepl("muTect",basename(currTool)) || grepl("mutect",basename(currTool)) || grepl("MuTect",basename(currTool)) || grepl("MUTECT",basename(currTool)) ){
 		MuTectIn=TRUE
 		muTectTool=currTool
 		#cat("MuTect is among the tools.\n")
