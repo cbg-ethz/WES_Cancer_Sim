@@ -22,6 +22,11 @@ normalize_scores <- function(raw_scores){
 }
 
 
+## # This will be used to define a unique id chr/pos/ref/var or now rather chr___pos___ref___var, because there was a variant reported from varscan with variant allele "C/G"!
+## Assumption: There is no chromosome, position, reference or variant allele that contains the substring "___"
+#MutationID_separator="/"
+MutationID_separator="___"
+
 outFileName=args[1]
 tool1=args[2]
 toolsToCombine=list()
@@ -84,7 +89,7 @@ realKK=ActualNumTools
 for(toolno in toolstotest){ # we take the results from the different tools
   score <- read.table(filestocombine[toolno],nrows=debugginglimit)
   scoresimp<-score[,usefulcols] # select the useful columns
-  scoresimp[,1]<-paste(score[,1],score[,2],score[,4],score[,5],sep="/") # define a unique id chr/pos/ref/var
+  scoresimp[,1]<-paste(score[,1],score[,2],score[,4],score[,5],sep=MutationID_separator) # define a unique id chr/pos/ref/var or now rather chr___pos___ref___var because there was a variant reported from varscan with variant allele "C/G"! 
   scoresimp[,2]<-rank(-score[,usefulcols[2]]) # replace the scores by a rank
   names(scoresimp)<-c("id","rank") # rename the columns
   orig[[toolno]]<-scoresimp # store the result
@@ -96,7 +101,7 @@ if(MuTectIn){
 	usefulcols<-c(2,7) # column seven has the accept/reject value
 	score<-read.table(filestocombine[toolno],nrows=debugginglimit)
 	scoresimp<-score[,usefulcols] # select the useful columns
-	scoresimp[,1]<-paste(score[,1],score[,2],score[,4],score[,5],sep="/") # define a unique id
+	scoresimp[,1]<-paste(score[,1],score[,2],score[,4],score[,5],sep=MutationID_separator) # define a unique id
 	scoresimp[,2]<-rank(score[,usefulcols[2]]=="REJECT") # replace the scores by a rank
 	names(scoresimp)<-c("id","rank") # rename the columns
 	orig[[toolno]]<-scoresimp # store the result
@@ -249,7 +254,7 @@ names(toprintasVCFfile)<-c("#CHROM","POS","ID","REF","ALT","QUAL","FILTER","INFO
 toprintasVCFfile[,c(3,7:9)]<-"." ## now we make the vcf format by setting the 3rd, 7th,8th, and 9th column to "."
 toprintasVCFfile[,6]<-normalize_scores(sumrank)
 
-toprintasVCFfile[,c(1:2,4:5)]<-matrix(unlist(strsplit(comby[,1], "/")),ncol=4,byrow=TRUE) ## the id is of the format "chr10/100003638/T/C", and here we split it up and assign the different fields to column 1, 2, 4 and 5
+toprintasVCFfile[,c(1:2,4:5)]<-matrix(unlist(strsplit(comby[,1], MutationID_separator)),ncol=4,byrow=TRUE) ## the id is of the format "chr10/100003638/T/C", and here we split it up and assign the different fields to column 1, 2, 4 and 5
 names(toprintasVCFfile)<-c("#CHROM","POS","ID","REF","ALT","QUAL","FILTER","INFO","FORMAT") # rename the columns
 
 #write.table(toprintasVCFfile,file=paste(sub(".vcf","",sub(".txt","",outFileName)),"_sum.txt",sep=""),quote=FALSE,sep="\t",row.names=FALSE)
