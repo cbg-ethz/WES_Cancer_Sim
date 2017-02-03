@@ -265,14 +265,14 @@ write.table(toprintasVCFfile,file=fileToGenerate,quote=FALSE,sep="\t",row.names=
 
 cat("prod combination saved.\n")
 
-sampley<-sample.int((NN-1),1000)
-rescalecubetest<-rescalecube[sampley,]
-#save(rescalecubetest,file=paste(sub(".vcf","",sub(".txt","",outFileName)),"_rescalecube.rData",sep=""))
-rescaleytest<-rescaley[sampley,]
-#save(rescaleytest,file=paste(sub(".vcf","",sub(".txt","",outFileName)),"_rescaley.rData",sep="")) 
-decorrytest<-decorry[sampley,]
-#save(decorrytest,file=paste(sub(".vcf","",sub(".txt","",outFileName)),"_decorry.rData",sep=""))
-decorcubetest<-decorcube[sampley,]
-#save(decorcubetest,file=paste(sub(".vcf","",sub(".txt","",outFileName)),"_decorcube.rData",sep="")) 
-#cat("test data saved and finished")
+# sampley<-sample.int((NN-1),1000)
+# rescalecubetest<-rescalecube[sampley,]
+# #save(rescalecubetest,file=paste(sub(".vcf","",sub(".txt","",outFileName)),"_rescalecube.rData",sep=""))
+# rescaleytest<-rescaley[sampley,]
+# #save(rescaleytest,file=paste(sub(".vcf","",sub(".txt","",outFileName)),"_rescaley.rData",sep="")) 
+# decorrytest<-decorry[sampley,]
+# #save(decorrytest,file=paste(sub(".vcf","",sub(".txt","",outFileName)),"_decorry.rData",sep=""))
+# decorcubetest<-decorcube[sampley,]
+# #save(decorcubetest,file=paste(sub(".vcf","",sub(".txt","",outFileName)),"_decorcube.rData",sep="")) 
+# #cat("test data saved and finished")
 
