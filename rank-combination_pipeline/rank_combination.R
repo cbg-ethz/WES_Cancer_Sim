@@ -36,18 +36,30 @@ numTools=0
 typeoftest=""
 for(i in 2:length(args)){
 	currTool=args[i]
-	#cat(paste("Found " ,currTool, " as input.\n",sep=""))
-	numTools=numTools+1
-	if(grepl("muTect",currTool) || grepl("mutect",currTool) || grepl("MuTect",currTool) || grepl("MUTECT",currTool) ){
+        # check whether the file is empty, and if so, skip it
+        tryCatch({
+          test_read <- read.table(args[i])
+        
+          # if there are lines for input, we continue counting it as an input vcf
+	  #cat(paste("Found " ,currTool, " as input.\n",sep=""))
+	  numTools=numTools+1
+	  #if(grepl("muTect",basename(currTool)) || grepl("mutect",basename(currTool)) || grepl("MuTect",basename(currTool)) || grepl("MUTECT",basename(currTool)) ){
+	  if(grepl("muTect",currTool) || grepl("mutect",currTool) || grepl("MuTect",currTool) || grepl("MUTECT",currTool) ){
 		MuTectIn=TRUE
 		muTectTool=currTool
 		#cat("MuTect is among the tools.\n")
 		# MuTect does not have a confidence score for ranking -> we consider the 7th column where it says "ACCEPT" or "REJECT"
-	} else {
+	  } else {
 		cntTools=cntTools+1
 		toolsToCombine[[cntTools]]=currTool
 		# All tools other than MuTect are assumed to have the confidence score in their 6th column, like in a vcf file
-	}
+          }
+        }, error=function(cond) {
+          # the file is probably empty except for the header lines that start with a "#" 
+          message("Error: The current vcf could not be read in. Here's the original error message:")
+          message(cond)
+          message("\nThe current vcf will be skipped.")           
+        })
 }
 
 ActualNumTools=numTools
