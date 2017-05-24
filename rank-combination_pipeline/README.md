@@ -13,7 +13,8 @@ combined_out_file.txt 			= the output file with the combined and ranked variants
 tool_1.vcf tool_2.vcf ... tool_n.vcf	= the vcf files of the tools to be combined. Should be at least two files.
 
 Assumptions:
-- The vcf files have a sixth column with the confidence score from the variant callers for ranking.
+- The vcf files have a sixth column with the confidence score from the variant callers for ranking. For the
+  confidence score, the assumption is that higher scores represent a higher confidence in the variant call.
 - In the case of MuTect, the seventh column is considered, which has the "ACCEPT" or "REJECT" label. 
-  And the script recognizes that the vcf is from MuTect, by finding the substring "mutect" in its name
+  And the script recognizes that the vcf is from MuTect, by finding the substring "mutect" in its name.
 
